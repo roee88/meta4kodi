@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<settings>
+
+    <!-- General -->
+    <category label="32000">
+
+        <!-- Auto update players -->
+        <setting id="players_update_url" label="32010" type="text" />
+        <setting subsetting="true" option="close" enable="!eq(-2,)" label="32012" type="action" action="RunPlugin(plugin://plugin.video.meta/update_players)"/>
+        
+        <!-- Movies -->
+        <setting label="32100" type="lsep"/>
+
+            <!-- Players -->
+            <setting label="32110" option="close" type="action" action="RunPlugin(plugin://plugin.video.meta/settings/players/movies)"/>
+            <setting subsetting="true" visible="false" enable="false" type="text" id="movies_enabled_players" />
+            
+            <!-- Default player -->
+            <setting label="32120" option="close" type="action" action="RunPlugin(plugin://plugin.video.meta/settings/default_player/movies)"/>
+            <setting subsetting="true" visible="!eq(0,)" enable="false" type="text" id="movies_default_player" default="selector" />
+
+            <!-- Default player from library -->
+            <setting label="32121" option="close" type="action" action="RunPlugin(plugin://plugin.video.meta/settings/default_player_fromlib/movies)"/>
+            <setting subsetting="true" visible="!eq(0,)" enable="false" type="text" id="movies_default_player_from_library" default="selector" />
+        
+        <!-- TV shows -->
+        <setting label="32200" type="lsep"/>
+        
+            <!-- Players -->
+            <setting label="32201" option="close" type="action" action="RunPlugin(plugin://plugin.video.meta/settings/players/tvshows)"/>
+            <setting subsetting="true" visible="false" enable="false" type="text" id="tv_enabled_players" />
+
+            <!-- Default players -->
+            <setting label="32210" option="close" type="action" action="RunPlugin(plugin://plugin.video.meta/settings/default_player/tvshows)"/>
+            <setting subsetting="true" visible="!eq(0,)" enable="false" type="text" id="tv_default_player" default="selector" />
+            
+            <!-- Default players from library -->
+            <setting label="32211" option="close" type="action" action="RunPlugin(plugin://plugin.video.meta/settings/default_player_fromlib/tvshows)"/>
+            <setting subsetting="true" visible="!eq(0,)" enable="false" type="text" id="tv_default_player_from_library" default="selector" />
+        
+    </category>
+    
+    <!-- Library -->
+    <category label="32300">
+        
+        <!-- Movies -->
+        <setting label="32100" type="lsep"/>
+            <!-- Automatic library from server -->
+            <setting visible="false" label="32304" type="text" id="movies_server_url" default=""/>
+            
+            
+            <!-- library folder -->
+            <setting id="movies_library_folder" label="32301" type="folder" default="special://userdata/addon_data/plugin.video.meta/Movies/" />
+
+        <!-- TV Shows -->
+        <setting label="32200" type="lsep"/>        
+            <!-- library folder -->
+            <setting id="tv_library_folder" label="32302" type="folder" default="special://userdata/addon_data/plugin.video.meta/TVShows/" />
+            
+    </category>
+    
+    <!-- Advanced -->
+    <category label="32400">
+        
+        <!-- Simple selector -->
+        <setting label="32402" type="bool" id="use_simple_selector" default="false"/>
+
+        <!-- Clear cache -->
+        <setting label="32401" type="action" action="RunPlugin(plugin://plugin.video.meta/clear_cache)"/>        
+        
+        <!-- Force library update -->
+        <setting label="32303" type="action" action="RunPlugin(plugin://plugin.video.meta/update_library)"/>
+                
+    </category>
+    
+
+</settings>
