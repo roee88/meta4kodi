@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addons>
+<addon id="context.meta" name="Meta Context Menu" version="1.0.0" provider-name="MetaTeam">
+  <requires>
+    <import addon="xbmc.python" version="2.20.0"/>
+    <import addon="script.module.requests"/>
+    <import addon="plugin.video.meta"/>
+  </requires>
+
+  <extension point="kodi.context.item" library="context_playable.py">
+    <provides>executable</provides>
+      <item>
+        <label>$ADDON[plugin.video.meta 31002]</label>
+        <visible>[StringCompare(ListItem.dbtype,movie) | StringCompare(ListItem.dbtype,episode)]</visible>
+      </item>
+  </extension>
+
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <language></language>
+    <summary>Library context menu item by Meta</summary>
+    <description>Adds select stream entry to library movies and episodes</description>
+  </extension>
+</addon>
+
+<addon id="plugin.video.meta" name="Meta" version="1.0.0" provider-name="MetaTeam">
+  <requires>
+    <import addon="xbmc.python" version="2.20.0"/>
+    <import addon="script.module.requests"/>
+    <import addon="script.module.futures" version="2.2.0"/>
+  </requires>
+
+  <extension point="xbmc.python.pluginsource" library="addon.py">
+    <provides>video</provides>
+  </extension>
+
+  <extension point="xbmc.service" library="service.py" start="[login|startup]">
+  </extension>
+
+  <extension point="kodi.context.item" library="context_playable.py">
+    <provides>executable</provides>
+      <item>
+        <label>$ADDON[plugin.video.meta 31002]</label>
+        <visible>!System.HasAddon(context.meta) + [StringCompare(ListItem.dbtype,movie) | StringCompare(ListItem.dbtype,episode)] + SubString(ListItem.FileNameAndPath, plugin.video.meta)</visible>
+      </item>
+  </extension>
+
+  <extension point="kodi.context.item" library="context_tvshow.py">
+    <provides>executable</provides>
+      <item>
+        <label>$ADDON[plugin.video.meta 31022]</label>
+        <visible>StringCompare(ListItem.dbtype,tvshow) + SubString(ListItem.Path, plugin.video.meta)</visible>
+      </item>
+  </extension>
+
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <language></language>
+    <summary>TMDB and TVDB media listing</summary>
+    <description>Browse TMDB and TVDB media</description>
+    <supportedcontent>
+      <content>movies</content>
+      <content>tvshows</content>
+      <content>episodes</content>
+    </supportedcontent>
+  </extension>
+</addon>
+
+<addon id="repository.meta" name="MetaTeam repo" version="1.0.0" provider-name="MetaTeam">
+        <extension point="xbmc.addon.repository" name="MetaTeam repo">
+                <info compressed="false">http://raw.github.com/metate/meta4kodi/master/addons.xml</info>
+                <checksum>http://raw.github.com/metate/meta4kodi/master/addons.xml.md5</checksum>
+                <datadir zip="true">http://raw.github.com/metate/meta4kodi/master/zip</datadir>
+        </extension>
+        <extension point="xbmc.addon.metadata">
+                <summary>MetaTeam repo</summary>
+                <description>Addons by MetaTeam.</description>
+                <disclaimer></disclaimer>
+                <platform>all</platform>
+        </extension>
+</addon>
+</addons>
