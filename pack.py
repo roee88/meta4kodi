@@ -28,7 +28,11 @@ if __name__ == '__main__':
             xml = open( _path, "r" ).read().replace("\r\n"," ").replace("\n"," ")
             version = re.compile('<addon.*?version="(.*?)"').findall(xml)[0]
             filename = "{0}-{1}.zip".format(addon, version)
-            zippath = os.path.join('zip', filename)
+            zippath = os.path.join('zip', addon, filename)
+            try:
+                os.makedirs(os.path.join('zip', addon))
+            except:
+                pass
             zipf = zipfile.ZipFile(zippath, 'w')
             zipdir(addon, zipf)
             zipf.close()
