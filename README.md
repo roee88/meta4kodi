@@ -32,18 +32,20 @@ link (the selection dialog is self-updating). Note that behavior is a bit
 different if only a single Meta-player is active - a native selection dialog is shown if multiple links are found and automatic playback is used otherwise.
 
 ### Other features
+- Compatibility with script.trakt
 - Multi-language:
     - All content displayed in Kodi's display language
-- Easy library integration:
+- Library integration:
+    - Add media content to local library
     - Automatic setup of video source and scraper.
     - Episodes marked as watched in library even when playing from within addon.
+    - Meta Context Menu addon allows opening Meta's selection dialog from your existing local library.
 - Default Meta-player settings:
     - Default player for movies.
     - Default player for tv shows.
     - Default player for movies on play from library.
     - Default player for tv shows on play from library.
     - A player per tv-show selected when a show is added to library.
-- Compatibility with script.trakt
 
 ### Fine.. how do I add a Meta-player for addon XYZ?
 A Meta-player is a json file with ".meta.json" file extension that specifies
@@ -308,7 +310,6 @@ Description: Search media in Kodi's library.
 
 ```
 {
-    "id": "provider.library",
     "name": "Library",
     "tvshows": [
         [
@@ -354,20 +355,19 @@ Description: Play using plugin.video.quasar.
 
 ```
 {
-    "id": "provider.quasar",
     "plugin": "plugin.video.quasar",
-    "name": "[COLOR FFD15FEE]Quasar[/COLOR]",
+    "name": "Quasar",
     "movies": [
         [
             {
-                "link": "plugin://plugin.video.quasar/movie/{imdb}/play"
+                "link": "plugin://plugin.video.quasar/movie/{tmdb}/play"
             }
         ]
     ],
     "tvshows": [
         [
             {
-                "link": "plugin://plugin.video.quasar/show/{id}/season/{season}/episode/{episode}/play"
+                "link": "plugin://plugin.video.quasar/show/{tmdb}/season/{season}/episode/{episode}/play"
             }
         ]
     ]
@@ -380,8 +380,7 @@ Description: Search episodes in plugin.video.IBA.
 
 ```
 {
-    "id": "provider.iba",
-    "name": "[COLOR FF418106]הערוץ הראשון[/COLOR]",
+    "name": "IBA",
     "plugin": "plugin.video.IBA",
     "filters": {
         "network": "הערוץ הראשון"
