@@ -63,8 +63,8 @@ class _PersistentDictMixin(object):
         if self.flag == 'r':
             return
         filename = self.filename
-        #tempname = filename + "." + self.id_generator()   + '.tmp'
-        tempname = filename + '.tmp'
+        tempname = filename + "." + self.id_generator()   + '.tmp'
+        #tempname = filename + '.tmp'
         fileobj = open(tempname, 'wb' if self.file_format == 'pickle' else 'w')
         try:
             self.dump(fileobj)

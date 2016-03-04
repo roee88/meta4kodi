@@ -142,13 +142,10 @@ def settings_set_default_player_fromlib(media):
 def update_players():
     url = plugin.get_setting(SETTING_PLAYERS_UPDATE_URL)
     
-    try:
-        if updater.update_players(url):
-            plugin.notify(msg=_('Players updated'), delay=1000)
-        else:
-            plugin.notify(msg=_('Failed to update players'), delay=1000)
-    except:
-        raise
+    if updater.update_players(url):
+        plugin.notify(msg=_('Players updated'), delay=1000)
+    else:
+        plugin.notify(msg=_('Failed to update players'), delay=1000)
     
     plugin.open_settings()
         
