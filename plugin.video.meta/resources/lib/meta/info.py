@@ -66,6 +66,7 @@ def get_episode_metadata_tvdb(season_metadata, episode, banners=True):
     info['episode'] = episode.get('episodenumber')
     info['title'] = episode.get('episodename','')
     info['aired'] = episode.get('firstaired','')
+    info['premiered'] = episode.get('firstaired','')
     info['rating'] = episode.get('rating', '')
     info['plot'] = episode.get('overview','')
     info['plotoutline'] = episode.get('overview','')
