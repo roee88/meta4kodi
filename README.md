@@ -2,8 +2,6 @@
 
 Are you using addons for streaming of movies or TV series? Meta is here to make your life a bit easier!
 
-\* Respect copyright laws. Meta is completely legal and provides no links at all. It only re-arranges the content of your other, already installed, addons. Do **not** ask for help related to any addon that may provide illegal content.
-
 ### Description
 Instead of searching for the same content through all of your addons,
 you simply find it in Meta and a list of all links from all configured addons
@@ -32,3 +30,5 @@ By default, none of the media is playable. However, other addons can be linked t
 
 ### Screenshots
 ![Meta screenshot](http://i65.tinypic.com/1564ac1.png)
+
+\* Respect copyright laws. Meta is completely legal and provides no links at all. It only re-arranges the content of your other, already installed, addons. Do **not** ask for help related to any addon that may provide illegal content.
