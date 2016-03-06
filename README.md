@@ -1,13 +1,28 @@
 # Meta for Kodi
 
-##Description
-
-Are you using multiple addons for streaming* of movies or TV series? Meta is here to make your life a bit easier!
+Are you using multiple addons for streaming of movies or TV series? Meta is here to make your life a bit easier!
 
 \* Respect copyright laws. Meta is completely legal and provides no links at
 all. It only re-arranges the content of your other, already installed, addons.
-Do **not** ask for help on writing a Meta-player file for any addon that may
-provide illegal content.
+Do **not** ask for help related to any addon that may provide illegal content.
+
+## Table of Contents
+
+  * [Meta for Kodi](#meta-for-kodi)
+    * [Description](#description)
+      * [What it does?](#what-it-does)
+      * [How does it work?](#how-does-it-work)
+      * [That sounds kind of slow :/](#that-sounds-kind-of-slow-)
+      * [Other features](#other-features)
+      * [Fine\.\. how do I add a Meta\-player for addon XYZ?](#fine-how-do-i-add-a-meta-player-for-addon-xyz)
+    * [Parameters](#parameters)
+        * [Movie parameters:](#movie-parameters)
+        * [TV show parameters:](#tv-show-parameters)
+    * [Meta\-player format](#meta-player-format)
+    * [How to write a CommandSequence?](#how-to-write-a-commandsequence)
+    * [Full examples](#full-examples)
+
+##Description
 
 ### What it does?
 Instead of searching for the same content through all of your addons,
