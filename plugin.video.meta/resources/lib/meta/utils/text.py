@@ -45,7 +45,8 @@ def equals(a, b):
     
 def is_ascii(s):
     try:
-        s.decode()
+        if isinstance(s, basestring):
+            s.decode()
         return True
     except UnicodeDecodeError:
         pass
