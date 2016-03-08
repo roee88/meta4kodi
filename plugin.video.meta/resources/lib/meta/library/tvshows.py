@@ -2,7 +2,7 @@ import os
 
 from xbmcswift2 import xbmc, xbmcvfs
 
-from meta import plugin, import_tvdb
+from meta import plugin, import_tvdb, LANG
 from meta.utils.text import date_to_timestamp
 from meta.library.tools import scan_library, add_source
 from meta.gui import dialogs
@@ -152,7 +152,7 @@ def setup_library(library_folder):
         if dialogs.yesno(_("Library setup"), msg):
             source_name = "Meta TVShows"
             
-            source_content = "('{0}','tvshows','metadata.tvdb.com','',0,0,'<settings><setting id=\"RatingS\" value=\"TheTVDB\" /><setting id=\"absolutenumber\" value=\"false\" /><setting id=\"dvdorder\" value=\"false\" /><setting id=\"fallback\" value=\"true\" /><setting id=\"fanart\" value=\"true\" /><setting id=\"language\" value=\"he\" /></settings>',0,0,NULL,NULL)".format(library_folder)
+            source_content = "('{0}','tvshows','metadata.tvdb.com','',0,0,'<settings><setting id=\"RatingS\" value=\"TheTVDB\" /><setting id=\"absolutenumber\" value=\"false\" /><setting id=\"dvdorder\" value=\"false\" /><setting id=\"fallback\" value=\"true\" /><setting id=\"fanart\" value=\"true\" /><setting id=\"language\" value=\"{1}\" /></settings>',0,0,NULL,NULL)".format(library_folder, LANG)
 
             add_source(source_name, library_folder, source_content)
 
