@@ -1,2 +1,5 @@
+v1.0.1
+- Fix: crash on empty TVDB data
+- Fix: hardcoded language in scraper settings
 v1.0.0
 - Initial release
