@@ -69,6 +69,9 @@ def parse_year(text):
         
 def date_to_timestamp(date_str, format="%Y-%m-%d"):
     if date_str:
-        tt = time.strptime(date_str, format)    
-        return int(time.mktime(tt))
-    return None    
+        try:
+            tt = time.strptime(date_str, format)    
+            return int(time.mktime(tt))
+        except:
+            return 0 # 1970
+    return None

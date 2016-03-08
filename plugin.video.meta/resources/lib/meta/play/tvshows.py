@@ -1,5 +1,5 @@
+import re
 import json
-
 from xbmcswift2 import xbmc
 
 from meta import plugin, import_tvdb, create_tvdb, LANG
@@ -68,12 +68,15 @@ def play_episode(id, season, episode, mode):
         params[lang].update(trakt_ids)
         params[lang]['info'] = show_info
         params[lang] = to_unicode(params[lang])
-        
+
+    # BETA
+    action_cancel()
+
     # Get single video selection
     use_simple_selector = plugin.get_setting(SETTING_USE_SIMPLE_SELECTOR, converter=bool)
     selection = get_video_link(players, params, mode, use_simple_selector)
     if not selection:
-        action_cancel()
+        #action_cancel()
         return
         
     # Get selection details
@@ -111,14 +114,17 @@ def play_episode(id, season, episode, mode):
             action_play(listitem)
         else:
             action_resolve(listitem)
-
         
 def get_episode_parameters(show, season, episode):
     id = show['id']
     
     # Get parameters
     parameters = {'id': id, 'season': season, 'episode': episode}
-    parameters['network'] = show.get('network', '')
+    
+    network = show.get('network', '')
+    
+    parameters['network'] = network
+    parameters['network_clean'] = re.sub(" (\(.*?\))", "", network)
     parameters['showname'] = show['seriesname']
     parameters['clearname'], _ = xbmc.getCleanMovieTitle(parameters['showname'])
     parameters['name'] = u'{showname} S{season:02d}E{episode:02d}'.format(**parameters)
