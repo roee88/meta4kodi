@@ -7,8 +7,6 @@ from meta import plugin
 from meta.utils.text import urlencode_path, to_utf8, to_unicode
 from meta.utils.rpc import RPC
 
-DEBUG = False
-
 # These are replace with whitespace in labels and parameters
 IGNORE_CHARS = ('.', '%20')#('+', '-', '%20', '.', ' ')
 
@@ -22,7 +20,7 @@ def list_dir(path):
     path = urlencode_path(path)
 
     try:
-        response = RPC.files.get_directory(media="files", directory=path)
+        response = RPC.files.get_directory(media="files", directory=path, properties=["season","episode"])
     except:
         plugin.log.error(path)
         raise
@@ -35,10 +33,10 @@ def list_dir(path):
                 # ignore .xsp and .xml directories
                 for ext in (".xsp", ".xml"):
                     if item['file'].endswith(ext) or item['file'].endswith(ext+"/"):
-                        continue            
-                dirs.append({'path':item['file'], 'label':item['label']})
+                        continue
+                dirs.append({'path':item['file'], 'label':item['label'], 'season': item.get('season')})
             else:
-                files.append({'path':item['file'], 'label':item['label']})
+                files.append({'path':item['file'], 'label':item['label'], 'episode': item.get('episode')})
                 
     return [path,dirs,files]
     
@@ -74,9 +72,24 @@ class Lister:
 #        return text
         
     @staticmethod
-    def _has_match(label, pattern, parameters):
+    def _has_match(item, pattern, parameters):
+        # Match by season
+        if pattern == "{season}" and item.get('season'):
+            item_season = str(item.get('season'))
+            param_season = str(parameters.get('season'))
+            if item_season == param_season:
+                return True
+        # Match by episode
+        elif pattern == "{episode}" and item.get('episode'):
+            item_episode = str(item.get('episode'))
+            param_episode = str(parameters.get('episode'))
+            print "XB", item_episode, param_episode
+            if item_episode == param_episode:
+                return True
+        
+        # Match by label
+        label = item['label']
         pattern = to_unicode(pattern)
-
         # Custom $$ shortcut for unicode word boundary
         pattern = pattern.replace("$$", r"($|^|\s|\]|\[)")
                 
@@ -99,8 +112,7 @@ class Lister:
         pattern = to_unicode(to_utf8(pattern))               
         label = to_unicode(to_utf8(label))
         
-        if DEBUG:
-            plugin.log.info("matching pattern {0} to label {1}".format(to_utf8(pattern), to_utf8(label)))
+        plugin.log.debug("matching pattern {0} to label {1}".format(to_utf8(pattern), to_utf8(label)))
          
         # Test for a match
         r = re.compile(pattern, re.I|re.UNICODE)
@@ -113,8 +125,7 @@ class Lister:
                 return False
             
             # Matched!
-            if DEBUG:
-                plugin.log.info("match: " + to_utf8(label))
+            plugin.log.debug("match: " + to_utf8(label))
             return True
             
         return False
@@ -154,7 +165,7 @@ class Lister:
             
             # Get matching directories
             matched_dirs = [x for x in dirs \
-             if Lister._has_match(x['label'], hint, parameters)]
+             if Lister._has_match(x, hint, parameters)]
             
             # Next path is first matched directory
             path = None
@@ -165,7 +176,7 @@ class Lister:
             if i == len(guidance) - 1:
                 # Get matching files
                 result_files = [x for x in files \
-                 if Lister._has_match(x['label'], hint, parameters)]
+                 if Lister._has_match(x, hint, parameters)]
                 result_dirs = matched_dirs
                            
         # Always return some list (and not None)
