@@ -1,5 +1,11 @@
+v1.0.2
+- Fix: timestamp error on add to library
+- {season} and {episode} can now match info-labels
+- RESOLVE now also calls Player.play.
+
 v1.0.1
 - Fix: crash on empty TVDB data
 - Fix: hardcoded language in scraper settings
+
 v1.0.0
 - Initial release
