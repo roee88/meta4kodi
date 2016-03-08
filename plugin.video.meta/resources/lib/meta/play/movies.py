@@ -53,11 +53,14 @@ def play_movie(tmdb_id, mode):
         params[lang]['info'] = movie_info
         params[lang] = to_unicode(params[lang])
         
+    # BETA
+    action_cancel()
+        
     # Get single video selection        
     use_simple_selector = plugin.get_setting(SETTING_USE_SIMPLE_SELECTOR, converter=bool)
     selection = get_video_link(players, params, mode, use_simple_selector)
     if not selection:
-        action_cancel()
+        #action_cancel()
         return
         
     # Get selection details

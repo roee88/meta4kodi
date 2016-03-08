@@ -1,5 +1,5 @@
 from traceback import print_exc
-from xbmcswift2 import xbmc
+from xbmcswift2 import xbmc, xbmcgui
 
 from meta import plugin
 from meta.gui import dialogs
@@ -42,19 +42,20 @@ def action_cancel(clear_playlist=True):
 
 def action_activate(link):
     xbmc.executebuiltin('Container.Update("%s")' % link)
-    action_cancel()
+    #action_cancel()
     
 def action_play(item):
-    action_cancel()
+    #action_cancel()
     plugin.play_video(item)
     
 def action_resolve(item):
-    plugin.set_resolved_url(item)
-
+    #plugin.set_resolved_url(item)
+    action_play(item)
             
 def get_video_link(players, params, mode, use_simple=False):
     lister = Lister()
     
+    pDialog = None
     selection = None
     try:
         if len(players) > 1 and use_simple:
@@ -66,7 +67,9 @@ def get_video_link(players, params, mode, use_simple=False):
         resolve_f = lambda p : resolve_player(p, lister, params)
         
         if len(players) > 1:
-            dialogs.wait_for_dialog("progressdialog", 5)   
+            pDialog = xbmcgui.DialogProgress()
+            pDialog.create('Meta', 'Working...')
+            dialogs.wait_for_dialog("progressdialog", 5)
             populator = lambda : execute(resolve_f, players, lister.stop_flag)
             selection = dialogs.select_ext(_("Play with..."), populator, len(players))
             
