@@ -1,21 +1,58 @@
 import re
 import copy
-from threading import Event
+from threading import Event, Thread, RLock, current_thread
 from xbmcswift2 import xbmc, xbmcgui
 
 from meta import plugin
+from meta.gui import dialogs
 from meta.utils.text import urlencode_path, to_utf8, to_unicode
 from meta.utils.rpc import RPC
 
 # These are replace with whitespace in labels and parameters
 IGNORE_CHARS = ('.', '%20')#('+', '-', '%20', '.', ' ')
 
+class KeyboardMonitor(Thread):
+    def __init__(self):
+        Thread.__init__(self)
+        
+        self.active = True
+        self.lock = RLock()
+        self.search_term = None
+    
+    def stop(self):
+        self.active = False
+                
+    def set_term(self, search_term):
+        self.lock.acquire()
+        self.search_term = search_term
+        
+    def release(self):
+        if self.search_term is not None:
+            if self.lock._RLock__owner is current_thread():
+                self.search_term = None
+                self.lock.release()
+                
+    def run(self):
+        while self.active and not xbmc.abortRequested:
+            if dialogs.wait_for_dialog("virtualkeyboard", interval=100):
+                # Nothing to search just close the keyboard??? 
+                if self.search_term is None:
+                    xbmc.executebuiltin("SendClick(103,32)") # TODO
+                    continue
+                        
+                # Send search term
+                RPC.Input.SendText(text=self.search_term, done=True)
+                #xbmc.executebuiltin("SendClick(103,32)") # TODO
+        
 def regex_escape(string):
     for c in ".$^{[(|)*+?\\":
         string = string.replace(c, "\\"+c)
     return string
     
 @plugin.cached(TTL=5, cache="browser")
+def cached_list_dir(path):
+    return list_dir(path)
+    
 def list_dir(path):
     path = urlencode_path(path)
 
@@ -51,6 +88,9 @@ class Lister:
             preserve_viewid = window.getFocusId()
         self.preserve_viewid = preserve_viewid
         
+        self.keyboardMonitor = KeyboardMonitor()
+        self.keyboardMonitor.start()
+        
     def get(self, path, guidance, parameters):            
         try:
             return self._browse_external(path, guidance, parameters)
@@ -63,7 +103,7 @@ class Lister:
     def stop(self):
         if not self.stop_flag.is_set():
             self.stop_flag.set()
-            
+        self.keyboardMonitor.stop()
             
 #    @staticmethod
 #    def _replace_special_chars(text):
@@ -92,13 +132,12 @@ class Lister:
                 episode_infolabel_match = True
         if pattern == "{episode}" and episode_infolabel_match:
             return True
-
+        
         # Match by season and episode info labels
         if pattern == "{season}x{episode}" and \
          season_infolabel_match and episode_infolabel_match:
             return True
                 
-        
         # Match by label
         label = item['label']
         pattern = to_unicode(pattern)
@@ -150,6 +189,7 @@ class Lister:
         
     def _browse_external(self, path, guidance, parameters):
         # Escape parameters
+        unescaped_parameters = parameters
         parameters = copy.deepcopy(parameters)
         for key, value in parameters.items():
             if isinstance(value, basestring):
@@ -161,6 +201,8 @@ class Lister:
         result_dirs = []
         result_files = []
         
+        keyboard_hint = False
+        
         for i, hint in enumerate(guidance):
             # Stop early if requested
             if self.stop_flag.isSet() or xbmc.abortRequested:
@@ -170,12 +212,25 @@ class Lister:
             if not path:
                 break
 
+            # Send keyboard data iff not last guidance
+            if hint.startswith("keyboard:") and i != len(guidance) - 1:
+                term = hint[len("keyboard:"):].lstrip()
+                term = term.format(**unescaped_parameters)
+                self.keyboardMonitor.set_term(term)
+                keyboard_hint = True
+                continue
+                
             # List path directory
             try:
-                _, dirs, files = list_dir(path)        
+                if keyboard_hint:
+                    _, dirs, files = list_dir(path)
+                else:
+                    _, dirs, files = cached_list_dir(path)
             except:
                 break
             finally:
+                if keyboard_hint:
+                    self.keyboardMonitor.release()
                 self._restore_viewid()
             
             # Get matching directories

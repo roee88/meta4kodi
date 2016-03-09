@@ -2,13 +2,17 @@ import time
 from threading import Thread, RLock
 from xbmcswift2 import xbmc, xbmcgui, xbmcaddon
 
-def wait_for_dialog(dialog_id, timeout):
+def wait_for_dialog(dialog_id, timeout=None, interval=500):
     start = time.time()
+    
     while not xbmc.getCondVisibility("Window.IsActive(%s)" % dialog_id):
-        time.sleep(0.5)
-        if time.time() - start >= timeout:
-            return
-
+        if xbmc.abortRequested or \
+         (timeout and time.time() - start >= timeout):
+            return False
+        xbmc.sleep(interval)
+        
+    return True
+    
 def ok(title, msg):
     xbmcgui.Dialog().ok(title, msg)
 
