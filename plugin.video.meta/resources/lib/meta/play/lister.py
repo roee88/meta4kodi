@@ -36,7 +36,7 @@ def list_dir(path):
                         continue
                 dirs.append({'path':item['file'], 'label':item['label'], 'season': item.get('season')})
             else:
-                files.append({'path':item['file'], 'label':item['label'], 'episode': item.get('episode')})
+                files.append({'path':item['file'], 'label':item['label'], 'season': item.get('season'), 'episode': item.get('episode')})
                 
     return [path,dirs,files]
     
@@ -73,19 +73,31 @@ class Lister:
         
     @staticmethod
     def _has_match(item, pattern, parameters):
-        # Match by season
-        if pattern == "{season}" and item.get('season'):
+        # Match by season info label
+        season_infolabel_match = False
+        if item.get('season'):
             item_season = str(item.get('season'))
-            param_season = str(parameters.get('season'))
+            param_season = str(parameters.get('season', ''))
             if item_season == param_season:
-                return True
-        # Match by episode
-        elif pattern == "{episode}" and item.get('episode'):
+                season_infolabel_match = True
+        if pattern == "{season}" and season_infolabel_match:
+            return True
+        
+        # Match by episode info label
+        episode_infolabel_match = False
+        if item.get('episode'):
             item_episode = str(item.get('episode'))
-            param_episode = str(parameters.get('episode'))
-            print "XB", item_episode, param_episode
+            param_episode = str(parameters.get('episode', ''))
             if item_episode == param_episode:
-                return True
+                episode_infolabel_match = True
+        if pattern == "{episode}" and episode_infolabel_match:
+            return True
+
+        # Match by season and episode info labels
+        if pattern == "{season}x{episode}" and \
+         season_infolabel_match and episode_infolabel_match:
+            return True
+                
         
         # Match by label
         label = item['label']
@@ -117,6 +129,9 @@ class Lister:
         # Test for a match
         r = re.compile(pattern, re.I|re.UNICODE)
         match = r.match(label)
+        if ", The" in label and match is None:
+            label = u"The " + label.replace(", The", "")
+            match = r.match(label)
         
         # If full match
         if match is not None and match.end() == len(label):

@@ -1,3 +1,7 @@
+v1.0.3
+- Match "name, The" with "The name"
+- Better info-labels matching (specify {season}x{episode} to match both)
+
 v1.0.2
 - Fix: timestamp error on add to library
 - {season} and {episode} can now match info-labels
