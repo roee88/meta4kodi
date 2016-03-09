@@ -90,7 +90,7 @@ def settings_set_players(media):
         if result is not None:
             selected = [players[i].id for i in result]
     except:
-        msg = "Kodi 16 required. Do you want to enable or players instead?"
+        msg = "Kodi 16 required. Do you want to enable all players instead?"
         if dialogs.yesno(_("Warning"), _(msg)):
             selected = [p.id for p in players]
     

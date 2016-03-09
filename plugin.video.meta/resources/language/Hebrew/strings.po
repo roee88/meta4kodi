@@ -32,15 +32,15 @@ msgid "Movies"
 msgstr "סרטים"
 
 msgctxt "#32110"
-msgid "Enable movies players"
+msgid "Enable movie players"
 msgstr "אפשר נגני סרטים"
 
 msgctxt "#32120"
-msgid "Preferred movies player"
+msgid "Preferred movie player"
 msgstr "נגן סרטים מועדף"
 
 msgctxt "#32121"
-msgid "Preferred movies player from library"
+msgid "Preferred movie player from library"
 msgstr "נגן סרטים מועדף בניגון מספריה"
 
 msgctxt "#32200"
