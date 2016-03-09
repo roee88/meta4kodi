@@ -2,7 +2,7 @@ import re
 import json
 from xbmcswift2 import xbmc
 
-from meta import plugin, import_tvdb, create_tvdb, LANG
+from meta import plugin, import_tmdb, import_tvdb, create_tvdb, LANG
 from meta.utils.properties import set_property
 from meta.utils.text import to_unicode 
 from meta.library.tvshows import get_player_plugin_from_library
@@ -116,28 +116,46 @@ def play_episode(id, season, episode, mode):
             action_resolve(listitem)
         
 def get_episode_parameters(show, season, episode):
-    id = show['id']
+    import_tmdb()
+    
+    episode_obj = show[season][episode]
     
     # Get parameters
-    parameters = {'id': id, 'season': season, 'episode': episode}
+    parameters = {'id': show['id'], 'season': season, 'episode': episode}
     
     network = show.get('network', '')
     
     parameters['network'] = network
     parameters['network_clean'] = re.sub(" (\(.*?\))", "", network)
+    
     parameters['showname'] = show['seriesname']
     parameters['clearname'], _ = xbmc.getCleanMovieTitle(parameters['showname'])
-    parameters['name'] = u'{showname} S{season:02d}E{episode:02d}'.format(**parameters)
-    parameters['title'] = show[season][episode].get('episodename', str(episode))
-    parameters['absolute_number'] = show[season][episode].get('absolute_number')        
-    parameters['firstaired'] = show[season][episode].get('firstaired')
+
+    parameters['absolute_number'] = episode_obj.get('absolute_number')
+    parameters['title'] = episode_obj.get('episodename', str(episode))
+    parameters['firstaired'] = episode_obj.get('firstaired')
     parameters['year'] = show.get('year', 0)
     parameters['imdb'] = show.get('imdb_id', '')    
+
     try:
         genre = [x for x in show['genre'].split('|') if not x == '']
     except:
         genre = []
     parameters['genre'] = " / ".join(genre)
+
+    is_anime = False
+    if parameters['absolute_number'] and \
+     parameters['absolute_number'] != '0' and \
+     "animation" in parameters['genre'].lower():
+        tmdb_results = tmdb.Find(show['id']).info(external_source="tvdb_id") or {}
+        for tmdb_show in tmdb_results.get("tv_results", []):
+            if "JP" in tmdb_show['origin_country']:
+                is_anime = True
+        
+    if is_anime:
+        parameters['name'] = u'{showname} {absolute_number}'.format(**parameters)
+    else:
+        parameters['name'] = u'{showname} S{season:02d}E{episode:02d}'.format(**parameters)
 
     for key, value in parameters.items():
         if isinstance(value, basestring):
@@ -145,44 +163,4 @@ def get_episode_parameters(show, season, episode):
             # Hack for really bad addons
             parameters[key + "_escaped"] = value.replace(" ", "%2520")
 
-    """
-    parameters = {'id': id, 'season': season, 'episode': episode}
-    parameters['network'] = show.get('network')
-    parameters['showname'] = show['seriesname'].replace(" ", "+")
-    
-    parameters['showname_clear'], _ = xbmc.getCleanMovieTitle(parameters['showname'])
-    
-    parameters['showname_escaped'] = show['seriesname'].replace(" ", "%2520")
-    parameters['name'] = u'{showname}+S{season:02d}E{episode:02d}'.format(**parameters)
-    try:
-        parameters['title'] = show[season][episode]['episodename'].replace(" ", "+")
-    except:
-        parameters['title'] = ""
-    
-    try:
-        parameters['absolute_number'] = show[season][episode].get('absolute_number')
-    except:
-        parameters['absolute_number'] = None
-        
-    parameters['year'] = show.get('year', 0)
-
-    try:
-        parameters['imdb'] = show['imdb_id'][2:]
-    except:
-        parameters['imdb'] = ""
-
-    parameters['firstaired'] = show[season][episode]['firstaired']
-    
-    try:
-        genre = [x for x in show['genre'].split('|') if not x == '']
-    except:
-        genre = []
-    parameters['genre'] = " / ".join(genre).replace('/','%2F').replace(" ", "+")
-        
-    for key, value in parameters.items():
-        if isinstance(value, basestring):
-            parameters[key + "_p"] = value.replace(" ", "+")
-            parameters[key + "_d"] = value.replace("+", " ").replace(" ", ".")
-            parameters[key + "_e"] = value.replace("+", " ").replace(" ", "%20")
-    """
     return parameters
