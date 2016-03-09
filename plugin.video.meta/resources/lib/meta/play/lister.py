@@ -28,22 +28,18 @@ class KeyboardMonitor(Thread):
         
     def release(self):
         if self.search_term is not None:
-            if self.lock._RLock__owner is current_thread():
-                self.search_term = None
-                self.lock.release()
+            self.search_term = None
+            self.lock.release()
                 
     def run(self):
         while self.active and not xbmc.abortRequested:
-            if dialogs.wait_for_dialog("virtualkeyboard", interval=100):
-                # Nothing to search just close the keyboard??? 
-                if self.search_term is None:
-                    xbmc.executebuiltin("SendClick(103,32)") # TODO
-                    continue
-                        
-                # Send search term
-                RPC.Input.SendText(text=self.search_term, done=True)
-                #xbmc.executebuiltin("SendClick(103,32)") # TODO
-        
+            if dialogs.wait_for_dialog("virtualkeyboard", timeout=5,interval=100):
+                if self.search_term is not None:
+                    # Send search term
+                    RPC.Input.SendText(text=self.search_term, done=True)
+                    while xbmc.getCondVisibility("Window.IsActive(virtualkeyboard)"):
+                        xbmc.sleep(100)
+
 def regex_escape(string):
     for c in ".$^{[(|)*+?\\":
         string = string.replace(c, "\\"+c)
@@ -230,7 +226,11 @@ class Lister:
                 break
             finally:
                 if keyboard_hint:
+                    while xbmc.getCondVisibility("Window.IsActive(virtualkeyboard)"):
+                        xbmc.sleep(100)
+                    
                     self.keyboardMonitor.release()
+                    keyboard_hint = False
                 self._restore_viewid()
             
             # Get matching directories
