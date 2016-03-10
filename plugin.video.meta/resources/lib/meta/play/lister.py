@@ -46,7 +46,7 @@ def regex_escape(string):
     return string
     
 @plugin.cached(TTL=5, cache="browser")
-def cached_list_dir(path):
+def cached_list_dir(path, keyboard_hint=None):
     return list_dir(path)
     
 def list_dir(path):
@@ -197,7 +197,7 @@ class Lister:
         result_dirs = []
         result_files = []
         
-        keyboard_hint = False
+        keyboard_hint = None
         
         for i, hint in enumerate(guidance):
             # Stop early if requested
@@ -213,24 +213,21 @@ class Lister:
                 term = hint[len("keyboard:"):].lstrip()
                 term = term.format(**unescaped_parameters)
                 self.keyboardMonitor.set_term(term)
-                keyboard_hint = True
+                keyboard_hint = term
                 continue
                 
             # List path directory
             try:
-                if keyboard_hint:
-                    _, dirs, files = list_dir(path)
-                else:
-                    _, dirs, files = cached_list_dir(path)
+                _, dirs, files = cached_list_dir(path, keyboard_hint)
             except:
                 break
             finally:
-                if keyboard_hint:
+                if keyboard_hint is not None:
                     while xbmc.getCondVisibility("Window.IsActive(virtualkeyboard)"):
-                        xbmc.sleep(100)
-                    
+                        xbmc.sleep(100)                    
                     self.keyboardMonitor.release()
-                    keyboard_hint = False
+                    keyboard_hint = None
+                    
                 self._restore_viewid()
             
             # Get matching directories
