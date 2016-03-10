@@ -38,8 +38,12 @@ def action_cancel(clear_playlist=True):
     if clear_playlist:
         xbmc.PlayList(xbmc.PLAYLIST_VIDEO).clear()
     plugin.set_resolved_url()
-    xbmc.executebuiltin('Dialog.Close(okdialog)')
-
+    xbmc.executebuiltin('Dialog.Close(okdialog, true)')
+    #if dialogs.wait_for_dialog("okdialog", 1):
+    #    xbmc.executebuiltin('Dialog.Close(okdialog, true)')
+    #    plugin.notify(msg='closed ok dialog!')
+        
+    
 def action_activate(link):
     xbmc.executebuiltin('Container.Update("%s")' % link)
     #action_cancel()
