@@ -37,7 +37,7 @@ def active_players(media, filters={}):
 def action_cancel(clear_playlist=True):
     if clear_playlist:
         xbmc.PlayList(xbmc.PLAYLIST_VIDEO).clear()
-    plugin.set_resolved_url('')
+    plugin.set_resolved_url()
     xbmc.executebuiltin('Dialog.Close(okdialog)')
 
 def action_activate(link):
