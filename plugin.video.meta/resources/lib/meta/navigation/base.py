@@ -88,15 +88,192 @@ def get_genres():
     result.update(get_tv_genres())
     return result
 
-@plugin.cached(TTL=None, cache="genres")
+@plugin.cached(TTL=60, cache="genres")
 def get_tv_genres():
-    import_tmdb()
-    result = tmdb.Genres().list_tv(language=LANG)
-    return dict([(i['id'], i['name']) for i in result['genres']])
+    result = tmdb_tv_genres()
+    if not result:
+        result = tmdb_tv_genres_mock()
+    return result
 
-@plugin.cached(TTL=None, cache="genres")
+@plugin.cached(TTL=60, cache="genres")
 def get_base_genres():
+    result = tmdb_movie_genres()
+    if not result:
+        result = tmdb_movie_genres_mock()
+    return result
+    
+@plugin.cached(TTL=None, cache="genres")
+def tmdb_movie_genres():
     import_tmdb()
     result = tmdb.Genres().list(language=LANG)
-    return dict([(i['id'], i['name']) for i in result['genres']])
+    genres= dict([(i['id'], i['name']) for i in result['genres'] \
+            if i['name'] is not None])
+    if genres:
+        return genres
+    return None
 
+@plugin.cached(TTL=None, cache="genres")
+def tmdb_tv_genres():
+    import_tmdb()
+    result = tmdb.Genres().list_tv(language=LANG)
+    genres= dict([(i['id'], i['name']) for i in result['genres'] \
+            if i['name'] is not None])
+    if genres:
+        return genres
+    return None
+    
+def tmdb_movie_genres_mock():
+    mock = [
+        {
+          "id": 28,
+          "name": "Action"
+        },
+        {
+          "id": 12,
+          "name": "Adventure"
+        },
+        {
+          "id": 16,
+          "name": "Animation"
+        },
+        {
+          "id": 35,
+          "name": "Comedy"
+        },
+        {
+          "id": 80,
+          "name": "Crime"
+        },
+        {
+          "id": 99,
+          "name": "Documentary"
+        },
+        {
+          "id": 18,
+          "name": "Drama"
+        },
+        {
+          "id": 10751,
+          "name": "Family"
+        },
+        {
+          "id": 14,
+          "name": "Fantasy"
+        },
+        {
+          "id": 10769,
+          "name": "Foreign"
+        },
+        {
+          "id": 36,
+          "name": "History"
+        },
+        {
+          "id": 27,
+          "name": "Horror"
+        },
+        {
+          "id": 10402,
+          "name": "Music"
+        },
+        {
+          "id": 9648,
+          "name": "Mystery"
+        },
+        {
+          "id": 10749,
+          "name": "Romance"
+        },
+        {
+          "id": 878,
+          "name": "Science Fiction"
+        },
+        {
+          "id": 10770,
+          "name": "TV Movie"
+        },
+        {
+          "id": 53,
+          "name": "Thriller"
+        },
+        {
+          "id": 10752,
+          "name": "War"
+        },
+        {
+          "id": 37,
+          "name": "Western"
+        }
+      ]
+    return dict([(i['id'], i['name']) for i in mock])
+
+
+def tmdb_tv_genres_mock():
+    mock = [
+        {
+          "id": 10759,
+          "name": "Action & Adventure"
+        },
+        {
+          "id": 16,
+          "name": "Animation"
+        },
+        {
+          "id": 35,
+          "name": "Comedy"
+        },
+        {
+          "id": 99,
+          "name": "Documentary"
+        },
+        {
+          "id": 18,
+          "name": "Drama"
+        },
+        {
+          "id": 10761,
+          "name": "Education"
+        },
+        {
+          "id": 10751,
+          "name": "Family"
+        },
+        {
+          "id": 10762,
+          "name": "Kids"
+        },
+        {
+          "id": 9648,
+          "name": "Mystery"
+        },
+        {
+          "id": 10763,
+          "name": "News"
+        },
+        {
+          "id": 10764,
+          "name": "Reality"
+        },
+        {
+          "id": 10765,
+          "name": "Sci-Fi & Fantasy"
+        },
+        {
+          "id": 10766,
+          "name": "Soap"
+        },
+        {
+          "id": 10767,
+          "name": "Talk"
+        },
+        {
+          "id": 10768,
+          "name": "War & Politics"
+        },
+        {
+          "id": 37,
+          "name": "Western"
+        }
+      ]
+      
+    return dict([(i['id'], i['name']) for i in mock])
