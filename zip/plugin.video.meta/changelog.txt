@@ -1,6 +1,10 @@
 v1.0.3
-- Match "name, The" with "The name"
-- Better info-labels matching (specify {season}x{episode} to match both)
+- Feaure: support keyboard steps
+- Improvement: match "name, The" with "The name"
+- Improvement: better info-labels matching (specify {season}x{episode} to match both)
+- Change: name parameter for anime now uses absolute episode number
+- Fix: bypass TMDB genres bug
+- Fix: avoid display of failed playback message
 
 v1.0.2
 - Fix: timestamp error on add to library
