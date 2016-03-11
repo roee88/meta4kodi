@@ -14,7 +14,7 @@ def scan_library():
     while not xbmc.abortRequested and \
      (xbmc.getCondVisibility('Library.IsScanning') or \
      xbmc.getCondVisibility('Window.IsActive(progressdialog)')):
-        time.sleep(1)
+        xbmc.sleep(1000)
     xbmc.executebuiltin('UpdateLibrary(video)')
     
 def get_movie_from_library(imdbnumber):
