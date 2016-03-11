@@ -1,0 +1,6 @@
+v1.0.1
+- Fix: only searched TVDB in English
+- Better matching for episodes
+
+v1.0.0
+- Initial release

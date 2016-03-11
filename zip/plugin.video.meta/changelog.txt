@@ -1,3 +1,8 @@
+v1.0.4
+- Avoid duplicates in library (considering only real content, not strms).
+- Close notifications while selection dialog is open
+- Bugfixes
+
 v1.0.3
 - Feaure: support keyboard steps
 - Improvement: match "name, The" with "The name"
