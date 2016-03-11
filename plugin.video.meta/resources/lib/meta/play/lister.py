@@ -222,6 +222,8 @@ class Lister:
             except:
                 break
             finally:
+                if xbmc.getCondVisibility("Window.IsActive(infodialog)"):
+                    xbmc.executebuiltin('Dialog.Close(infodialog, true)')
                 if keyboard_hint is not None:
                     while xbmc.getCondVisibility("Window.IsActive(virtualkeyboard)"):
                         xbmc.sleep(100)                    
