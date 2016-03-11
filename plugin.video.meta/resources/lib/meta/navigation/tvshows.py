@@ -8,6 +8,7 @@ from meta.gui import dialogs
 from meta.info import get_tvshow_metadata_tvdb, get_season_metadata_tvdb, get_episode_metadata_tvdb
 from meta.utils.text import parse_year, is_ascii
 from meta.utils.executor import execute
+from meta.utils.properties import set_property
 from meta.library.tvshows import setup_library, add_tvshow_to_library
 from meta.library.tools import scan_library
 from meta.play.base import active_players
@@ -171,7 +172,8 @@ def tv_add_to_library(id):
     library_folder = setup_library(plugin.get_setting(SETTING_TV_LIBRARY_FOLDER))
 
     # add to library
-    add_tvshow_to_library(library_folder, show, player.id)
+    if add_tvshow_to_library(library_folder, show, player.id):
+        set_property("clean_library", 1)
         
     # start scan 
     scan_library()

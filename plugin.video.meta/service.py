@@ -8,10 +8,20 @@ import datetime
 
 from xbmcswift2 import xbmc
 from meta.video_player import VideoPlayer
+from meta.utils.properties import get_property, clear_property
 from addon import update_library
 from settings import UPDATE_LIBRARY_INTERVAL
 
 player = VideoPlayer()
+
+class Monitor(xbmc.Monitor):
+    def onDatabaseUpdated(self, database):
+        if database == "video":
+            if get_property("clean_library"):
+                xbmc.executebuiltin("XBMC.CleanLibrary(video, false)")
+                clear_property("clean_library")
+                
+monitor = Monitor()
 
 def go_idle(duration):
     while not xbmc.abortRequested and duration > 0:
