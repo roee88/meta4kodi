@@ -27,6 +27,13 @@ By default, none of the media is playable. However, other addons can be linked t
     - Default player on play from library.
     - A player per tv-show selected when a show is added to library.
 
+### Install
+Use the repository to install and get automatic updates
+https://github.com/metate/meta4kodi/raw/master/zip/repository.meta/repository.meta-1.0.0.zip
+
+### Discuss
+Only on Kodi forum: http://forum.kodi.tv/showthread.php?tid=263065
+**Read the forum rules before posting**
 
 ### Screenshots
 ![Meta screenshot](http://i65.tinypic.com/1564ac1.png)
