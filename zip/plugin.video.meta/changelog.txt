@@ -1,3 +1,6 @@
+v1.0.5
+- Fixed clearname parameter
+
 v1.0.4
 - Avoid duplicates in library (considering only real content, not strms).
 - Close notifications while selection dialog is open
