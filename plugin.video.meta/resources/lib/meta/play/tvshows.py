@@ -130,7 +130,7 @@ def get_episode_parameters(show, season, episode):
     
     parameters['showname'] = show['seriesname']
     #parameters['clearname'], _ = xbmc.getCleanMovieTitle(parameters['showname'])
-    parameters['clearname'] = re.sub("(\(.*?\))", "", network).strip()
+    parameters['clearname'] = re.sub("(\(.*?\))", "", show['seriesname']).strip()
 
     parameters['absolute_number'] = episode_obj.get('absolute_number')
     parameters['title'] = episode_obj.get('episodename', str(episode))
