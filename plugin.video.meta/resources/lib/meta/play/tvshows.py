@@ -161,6 +161,7 @@ def get_episode_parameters(show, season, episode):
     for key, value in parameters.items():
         if isinstance(value, basestring):
             parameters[key + "_+"] = value.replace(" ", "+")
+            parameters[key + "_-"] = value.replace(" ", "-")            
             # Hack for really bad addons
             parameters[key + "_escaped"] = value.replace(" ", "%2520")
 
