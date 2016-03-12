@@ -106,6 +106,7 @@ def get_movie_parameters(movie):
     for key, value in parameters.items():
         if isinstance(value, basestring):
             parameters[key + "_+"] = value.replace(" ", "+")
+            parameters[key + "_-"] = value.replace(" ", "-")            
             # Hack for really bad addons
             parameters[key + "_escaped"] = value.replace(" ", "%2520")
 
