@@ -1,6 +1,7 @@
 import time
 from threading import Thread, RLock
 from xbmcswift2 import xbmc, xbmcgui, xbmcaddon
+from meta import plugin
 
 def wait_for_dialog(dialog_id, timeout=None, interval=500):
     start = time.time()
@@ -25,15 +26,34 @@ def select(title, items):
 def multiselect(title, items):
     return xbmcgui.Dialog().multiselect(title, items)
 
+	
 def select_ext(title, populator, tasks_count):
-    addonPath = xbmcaddon.Addon().getAddonInfo('path').decode('utf-8')
-    dlg = SelectorDialog("DialogSelect.xml", addonPath, title = title,
-            populator = populator, steps=tasks_count)
-    dlg.doModal()
-    selection = dlg.get_selection()
-    del dlg
-    return selection
+    window = FanArtWindow()
+    window.show()
+    try:
     
+        addonPath = xbmcaddon.Addon().getAddonInfo('path').decode('utf-8')
+        dlg = SelectorDialog("DialogSelect.xml", addonPath, title = title, 
+                populator = populator, steps=tasks_count)
+        dlg.doModal()
+        selection = dlg.get_selection()
+        del dlg
+    finally:
+        window.close()
+        del window
+	
+    return selection
+	
+class FanArtWindow(xbmcgui.WindowDialog):
+    def __init__(self):
+        fanart = xbmc.getInfoLabel('ListItem.Property(Fanart_Image)')
+
+        background = xbmcgui.ControlImage(0, 0, 1280, 720, plugin.addon.getAddonInfo('fanart'))
+        self.addControl(background)
+        
+        fanart = xbmcgui.ControlImage(0, 0, 1280, 720, fanart)
+        self.addControl(fanart)
+        
 class SelectorDialog(xbmcgui.WindowXMLDialog):    
     def __init__(self, *args, **kwargs):
         xbmcgui.WindowXMLDialog.__init__(self)
