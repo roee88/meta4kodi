@@ -75,7 +75,7 @@ def main():
                 
                 identifier = get_tvshow_id_by_episode(dbid)
                 if identifier:
-                    by_id = [x for x in results if x['id'] == identifier or x['imdb_id'] == identifier]
+                    by_id = [x for x in results if x['id'] == identifier or x.get('imdb_id') == identifier]
                     if by_id:
                         tvdb_id = by_id[0]['id']
                         
