@@ -3,7 +3,7 @@
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'resources', 'lib'))
 
-import xbmc
+import xbmc, xbmcvfs
 from tvdb_api import Tvdb
 from meta.utils.rpc import RPC
 
@@ -11,10 +11,14 @@ pluginid = "plugin.video.meta"
 
 def get_url(stream_file):
     if stream_file.endswith(".strm"):
-        with open(xbmc.translatePath(stream_file), "rb") as f:
+        f = xbmcvfs.File(stream_file)
+        try:
             content = f.read()
             if content.startswith("plugin://" + pluginid):
                 return content.replace("/library", "/select")
+        finally:
+            f.close()
+            
     return None
     
 def get_imdb_id(media_type, dbid):

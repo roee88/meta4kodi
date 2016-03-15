@@ -57,7 +57,7 @@ def add_tvshow_to_library(library_folder, show, play_plugin = None):
     ## Create show folder
     enc_show = showname.translate(None, '\/:*?"<>|').strip('.')
     show_folder = os.path.join(library_folder, str(id)+'/')
-    if not os.path.exists(show_folder):
+    if not xbmcvfs.exists(show_folder):
         try: 
             xbmcvfs.mkdir(show_folder)
         except:
@@ -73,7 +73,7 @@ def add_tvshow_to_library(library_folder, show, play_plugin = None):
             
         # Create nfo file
         nfo_filepath = os.path.join(show_folder, 'tvshow.nfo')
-        if not os.path.isfile(nfo_filepath):
+        if not xbmcvfs.exists(nfo_filepath):
             nfo_file = xbmcvfs.File(nfo_filepath, 'w')
             content = "http://thetvdb.com/index.php?tab=series&id=%s" % str(id)
             nfo_file.write(content)
@@ -172,7 +172,7 @@ def library_tv_strm(show, folder, id, season, episode):
     # Create episode strm
     enc_name = 'S%02dE%02d' % (season, episode)
     stream = os.path.join(folder, enc_name + '.strm')
-    if not os.path.exists(stream):
+    if not xbmcvfs.exists(stream):
         file = xbmcvfs.File(stream, 'w')
         content = plugin.url_for("tv_play", id=id, season=season, episode=episode, mode='library')
         file.write(str(content))

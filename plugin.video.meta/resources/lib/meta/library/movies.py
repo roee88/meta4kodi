@@ -75,7 +75,7 @@ def add_movie_to_library(library_folder, src, id, date):
     
     # create nfo file
     nfo_filepath = os.path.join(library_folder, str(id)+".nfo")
-    if not os.path.isfile(nfo_filepath):
+    if not xbmcvfs.exists(nfo_filepath):
         changed = True
         nfo_file = xbmcvfs.File(nfo_filepath, 'w')
         if src == "imdb":
@@ -89,7 +89,7 @@ def add_movie_to_library(library_folder, src, id, date):
         
     # create strm file
     strm_filepath = os.path.join(library_folder, str(id)+".strm")
-    if not os.path.isfile(strm_filepath):
+    if not xbmcvfs.exists(strm_filepath):
         changed = True
         strm_file = xbmcvfs.File(strm_filepath, 'w')
         content = plugin.url_for("movies_play", src=src, id=id, mode='library')

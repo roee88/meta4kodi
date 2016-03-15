@@ -40,11 +40,14 @@ def get_players(media, filters = {}):
     players_path = "special://profile/addon_data/{0}/players/".format(plugin.id)
     files = [x for x in xbmcvfs.listdir(players_path)[1] if x.endswith(EXTENSION)]
     for file in files:
-        path = xbmc.translatePath(players_path + "/" + file)
+        path = players_path + "/" + file
                     
         try:
-            with open(path, "r") as f:
+            f = xbmcvfs.File(path)
+            try:
                 meta = json.loads(f.read())
+            finally:
+                f.close()
             player = AddonPlayer(file, media, meta)
             if not player.is_empty():
                 players.append(player)
