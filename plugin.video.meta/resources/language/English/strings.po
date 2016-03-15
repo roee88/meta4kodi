@@ -87,6 +87,10 @@ msgctxt "#32304"
 msgid "Automatic movies library server"
 msgstr ""
 
+msgctxt "#32305"
+msgid "Set added time to release date"
+msgstr ""
+
 msgctxt "#32402"
 msgid "Use simple selection dialog"
 msgstr ""

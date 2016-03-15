@@ -42,7 +42,8 @@
     
     <!-- Library -->
     <category label="32300">
-        
+        <setting label="32305" type="bool" id="library_set_date" default="false"/>
+
         <!-- Movies -->
         <setting label="32100" type="lsep"/>
             <!-- Automatic library from server -->
@@ -70,7 +71,8 @@
         
         <!-- Force library update -->
         <setting label="32303" type="action" action="RunPlugin(plugin://plugin.video.meta/update_library)"/>
-                
+
+        
     </category>
     
 

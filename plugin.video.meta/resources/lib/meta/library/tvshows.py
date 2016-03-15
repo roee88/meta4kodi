@@ -10,7 +10,7 @@ from meta.utils.properties import set_property
 from meta.library.tools import scan_library, add_source
 from meta.gui import dialogs
 
-from settings import SETTING_TV_LIBRARY_FOLDER
+from settings import SETTING_TV_LIBRARY_FOLDER, SETTING_LIBRARY_SET_DATE
 from language import get_string as _
 
 def update_library():
@@ -177,13 +177,14 @@ def library_tv_strm(show, folder, id, season, episode):
         content = plugin.url_for("tv_play", id=id, season=season, episode=episode, mode='library')
         file.write(str(content))
         file.close()
-
-        try:
-            firstaired = show[season][episode]['firstaired']
-            t = date_to_timestamp(firstaired)
-            os.utime(stream, (t,t))
-        except:
-            pass    
+        
+        if plugin.get_setting(SETTING_LIBRARY_SET_DATE, converter=bool):
+            try:
+                firstaired = show[season][episode]['firstaired']
+                t = date_to_timestamp(firstaired)
+                os.utime(stream, (t,t))
+            except:
+                pass
     
 def get_player_plugin_from_library(id):        
     # Specified by user

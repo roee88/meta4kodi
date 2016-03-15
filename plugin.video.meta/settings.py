@@ -26,6 +26,7 @@ SETTING_MOVIES_DEFAULT_PLAYER_FROM_LIBRARY = "movies_default_player_from_library
 SETTING_TV_ENABLED_PLAYERS = "tv_enabled_players"
 SETTING_TV_DEFAULT_PLAYER = "tv_default_player"
 SETTING_TV_DEFAULT_PLAYER_FROM_LIBRARY = "tv_default_player_from_library"
+SETTING_LIBRARY_SET_DATE = "library_set_date"
 SETTING_MOVIES_SERVER_URL = "movies_server_url"
 SETTING_MOVIES_LIBRARY_FOLDER = "movies_library_folder"
 SETTING_TV_LIBRARY_FOLDER = "tv_library_folder"

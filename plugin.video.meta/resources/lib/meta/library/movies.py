@@ -10,9 +10,8 @@ from meta.library.tools import scan_library, add_source
 from meta.utils.rpc import RPC
 from meta.gui import dialogs
 
-from settings import SETTING_MOVIES_SERVER_URL, SETTING_MOVIES_LIBRARY_FOLDER
 from language import get_string as _
-
+from settings import SETTING_MOVIES_SERVER_URL, SETTING_MOVIES_LIBRARY_FOLDER, SETTING_LIBRARY_SET_DATE
 
 @plugin.cached(TTL=60*2)
 def query_movies_server(url):
@@ -84,7 +83,7 @@ def add_movie_to_library(library_folder, src, id, date):
             content = "http://www.themoviedb.org/movie/%s" % str(id)
         nfo_file.write(content)
         nfo_file.close()
-        if date:
+        if date and plugin.get_setting(SETTING_LIBRARY_SET_DATE, converter=bool):
             os.utime(nfo_filepath, (date,date))
         
     # create strm file
@@ -95,7 +94,7 @@ def add_movie_to_library(library_folder, src, id, date):
         content = plugin.url_for("movies_play", src=src, id=id, mode='library')
         strm_file.write(content)
         strm_file.close()
-        if date:
+        if date and plugin.get_setting(SETTING_LIBRARY_SET_DATE, converter=bool):
             os.utime(strm_filepath, (date,date))
     
     return changed    
