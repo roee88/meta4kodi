@@ -59,6 +59,14 @@ def action_resolve(item):
 def get_video_link(players, params, mode, use_simple=False):
     lister = Lister()
     
+    # Extend parameters
+    for key, value in params.items():
+        if isinstance(value, basestring):
+            params[key + "_+"] = value.replace(" ", "+")
+            params[key + "_-"] = value.replace(" ", "-")
+            params[key + "_escaped"] = value.replace(" ", "%2520")
+            params[key + "_escaped+"] = value.replace(" ", "%252B")
+
     pDialog = None
     selection = None
     try:

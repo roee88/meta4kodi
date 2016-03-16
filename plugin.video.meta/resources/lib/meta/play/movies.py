@@ -102,24 +102,5 @@ def get_movie_parameters(movie):
     parameters['original_title'] = movie['original_title']
     parameters['year'] = parse_year(movie['release_date'])
     parameters['name'] = u'%s (%s)' % (parameters['title'], parameters['year'])
-
-    for key, value in parameters.items():
-        if isinstance(value, basestring):
-            parameters[key + "_+"] = value.replace(" ", "+")
-            parameters[key + "_-"] = value.replace(" ", "-")            
-            # Hack for really bad addons
-            parameters[key + "_escaped"] = value.replace(" ", "%2520")
-
-    """
-    for key, value in parameters.items():
-        if isinstance(value, basestring):
-            parameters[key + "_+"] = value.replace(" ", "+")
-            parameters[key + "_dot"] = value.replace(" ", ".")
-            parameters[key + "_%20"] = value.replace(" ", "%20")
-            parameters[key + "_%2520"] = value.replace(" ", "%2520")
-    
-    parameters['title'] = parameters['title'].replace(' ','%20')
-    parameters['title_escaped'] = parameters['title'].replace('%20','%2520')
-    """
     
     return parameters

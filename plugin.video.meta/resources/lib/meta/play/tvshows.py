@@ -158,11 +158,4 @@ def get_episode_parameters(show, season, episode):
     else:
         parameters['name'] = u'{showname} S{season:02d}E{episode:02d}'.format(**parameters)
 
-    for key, value in parameters.items():
-        if isinstance(value, basestring):
-            parameters[key + "_+"] = value.replace(" ", "+")
-            parameters[key + "_-"] = value.replace(" ", "-")            
-            # Hack for really bad addons
-            parameters[key + "_escaped"] = value.replace(" ", "%2520")
-
     return parameters
