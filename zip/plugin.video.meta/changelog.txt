@@ -1,3 +1,6 @@
+v1.0.8
+- Hack to hide keyboard is off by default due to issues on some skins (option available in advanced settings)
+
 v1.0.7
 - Hack to hide keyboard when keyboard steps are used (may not work on all skins)
 
