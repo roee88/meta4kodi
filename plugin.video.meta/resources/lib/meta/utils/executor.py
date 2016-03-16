@@ -4,7 +4,7 @@ from xbmcswift2 import xbmc
 
 Executor = concurrent.futures.ThreadPoolExecutor
 
-def execute(f, iterable, stop_flag=None, workers=5):
+def execute(f, iterable, stop_flag=None, workers=10):
     with Executor(max_workers=workers) as executor:
         for future in _batched_pool_runner(executor, workers, f, iterable):
             if xbmc.abortRequested:
