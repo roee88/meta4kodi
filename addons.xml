@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="context.meta" name="Meta Context Menu" version="1.0.1" provider-name="MetaTeam">
+<addon id="context.meta" name="Meta Context Menu" version="1.0.2" provider-name="MetaTeam">
   <requires>
     <import addon="xbmc.python" version="2.20.0"/>
     <import addon="script.module.requests"/>
@@ -23,7 +23,7 @@
   </extension>
 </addon>
 
-<addon id="plugin.video.meta" name="Meta" version="1.0.5" provider-name="MetaTeam">
+<addon id="plugin.video.meta" name="Meta" version="1.0.6" provider-name="MetaTeam">
   <requires>
     <import addon="xbmc.python" version="2.20.0"/>
     <import addon="script.module.requests"/>

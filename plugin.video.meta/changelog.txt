@@ -1,3 +1,9 @@
+v1.0.6
+- Added support for replacing whitespace with - and with %252B (turns into + sign after python unquote_plus call)
+- Added fanart behind selection dialog
+- Possible fix to handle nfs paths
+- Change: no longer alters strm modification date (option to set it to release date added to settings)
+
 v1.0.5
 - Fixed clearname parameter
 
