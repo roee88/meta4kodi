@@ -1,3 +1,6 @@
+v1.0.7
+- Hack to hide keyboard when keyboard steps are used (may not work on all skins)
+
 v1.0.6
 - Added support for replacing whitespace with - and with %252B (turns into + sign after python unquote_plus call)
 - Added fanart behind selection dialog
