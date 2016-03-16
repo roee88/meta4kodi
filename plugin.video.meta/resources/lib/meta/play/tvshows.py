@@ -70,13 +70,18 @@ def play_episode(id, season, episode, mode):
         params[lang] = to_unicode(params[lang])
 
     # BETA
-    action_cancel()
+    use_simple_selector = plugin.get_setting(SETTING_USE_SIMPLE_SELECTOR, converter=bool)
+    is_extended = not (use_simple_selector or len(players) == 1)    
+    if is_extended:
+        action_cancel()
 
     # Get single video selection
-    use_simple_selector = plugin.get_setting(SETTING_USE_SIMPLE_SELECTOR, converter=bool)
     selection = get_video_link(players, params, mode, use_simple_selector)
+    
+    if not is_extended:
+        action_cancel()
+        
     if not selection:
-        #action_cancel()
         return
         
     # Get selection details
