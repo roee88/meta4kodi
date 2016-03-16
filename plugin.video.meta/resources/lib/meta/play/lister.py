@@ -171,7 +171,7 @@ class Lister:
         # If full match
         if match is not None and match.end() == len(label):
             # Special handling of first season
-            if first_season and not match.group('season') in ('1', '', '01'):
+            if first_season and not match.group('season') in ('1', '', '01', None):
                 return False
             
             # Matched!
