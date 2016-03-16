@@ -38,11 +38,7 @@ def action_cancel(clear_playlist=True):
     if clear_playlist:
         xbmc.PlayList(xbmc.PLAYLIST_VIDEO).clear()
     plugin.set_resolved_url()
-    xbmc.executebuiltin('Dialog.Close(okdialog, true)')
-    #if dialogs.wait_for_dialog("okdialog", 1):
-    #    xbmc.executebuiltin('Dialog.Close(okdialog, true)')
-    #    plugin.notify(msg='closed ok dialog!')
-        
+    xbmc.executebuiltin('Dialog.Close(okdialog, true)')    
     
 def action_activate(link):
     xbmc.executebuiltin('Container.Update("%s")' % link)
@@ -60,13 +56,14 @@ def get_video_link(players, params, mode, use_simple=False):
     lister = Lister()
     
     # Extend parameters
-    for key, value in params.items():
-        if isinstance(value, basestring):
-            params[key + "_+"] = value.replace(" ", "+")
-            params[key + "_-"] = value.replace(" ", "-")
-            params[key + "_escaped"] = value.replace(" ", "%2520")
-            params[key + "_escaped+"] = value.replace(" ", "%252B")
-
+    for lang, lang_params in params.items():
+        for key, value in lang_params.items():
+            if isinstance(value, basestring):
+                params[lang][key + "_+"] = value.replace(" ", "+")
+                params[lang][key + "_-"] = value.replace(" ", "-")
+                params[lang][key + "_escaped"] = value.replace(" ", "%2520")
+                params[lang][key + "_escaped+"] = value.replace(" ", "%252B")
+        
     pDialog = None
     selection = None
     try:
