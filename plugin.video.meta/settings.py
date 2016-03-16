@@ -6,7 +6,7 @@ if __name__ == "__main__":
     import xml.etree.ElementTree as ET
     tree = ET.parse('resources/settings.xml')
     ids = filter(None, [item.get('id') for item in tree.findall('.//setting')])
-        
+    
     content = []
     with open(__file__, "r") as me:
         content = me.readlines()
@@ -31,3 +31,4 @@ SETTING_MOVIES_SERVER_URL = "movies_server_url"
 SETTING_MOVIES_LIBRARY_FOLDER = "movies_library_folder"
 SETTING_TV_LIBRARY_FOLDER = "tv_library_folder"
 SETTING_USE_SIMPLE_SELECTOR = "use_simple_selector"
+SETTING_ADVANCED_KEYBOARD_HACKS = "advanced_keyboard_hacks"

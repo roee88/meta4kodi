@@ -95,6 +95,10 @@ msgctxt "#32402"
 msgid "Use simple selection dialog"
 msgstr ""
 
+msgctxt "#32403"
+msgid "Attempt to hide keyboard while Meta is searching (may not work or cause issues on some skins)"
+msgstr ""
+
 msgctxt "#31000"
 msgid "Would you like to automatically set Meta as a movies video source?"
 msgstr ""

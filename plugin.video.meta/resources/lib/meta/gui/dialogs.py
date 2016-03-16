@@ -2,6 +2,7 @@ import time
 from threading import Thread, RLock
 from xbmcswift2 import xbmc, xbmcgui, xbmcaddon
 from meta import plugin
+from settings import SETTING_ADVANCED_KEYBOARD_HACKS
 
 def wait_for_dialog(dialog_id, timeout=None, interval=500):
     start = time.time()
@@ -51,16 +52,21 @@ class FanArtWindow(xbmcgui.WindowDialog):
 class ExtendedDialogHacks(object):
     def __enter__(self):
         self.fanart_window = FanArtWindow()
-        self.numeric_keyboard = xbmcgui.Window(10109)
         
-        Thread(target = lambda: self.numeric_keyboard.show()).start()
-        wait_for_dialog('numericinput', interval=50)
+        self.numeric_keyboard = None         
+        if plugin.get_setting(SETTING_ADVANCED_KEYBOARD_HACKS, converter=bool):
+            self.numeric_keyboard = xbmcgui.Window(10109)
+            Thread(target = lambda: self.numeric_keyboard.show()).start()
+            wait_for_dialog('numericinput', interval=50)
+            
         self.fanart_window.show()
 
     def __exit__(self, exc_type, exc_value, traceback):
-        self.numeric_keyboard.close()
-        del self.numeric_keyboard
-        xbmc.executebuiltin("Dialog.Close(numericinput, true)")
+        if self.numeric_keyboard is not None:
+            self.numeric_keyboard.close()
+            del self.numeric_keyboard
+            xbmc.executebuiltin("Dialog.Close(numericinput, true)")
+        
         self.fanart_window.close()
         del self.fanart_window
             

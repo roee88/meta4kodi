@@ -69,6 +69,7 @@ _ALL['clear cache'] = 32401
 _ALL['automatic movies library server'] = 32304
 _ALL['set added time to release date'] = 32305
 _ALL['use simple selection dialog'] = 32402
+_ALL['attempt to hide keyboard while meta is searching (may not work or cause issues on some skins)'] = 32403
 _ALL['would you like to automatically set meta as a movies video source?'] = 31000
 _ALL['genres'] = 31001
 _ALL['select stream...'] = 31002

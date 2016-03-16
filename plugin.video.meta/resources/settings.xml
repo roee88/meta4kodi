@@ -66,6 +66,9 @@
         <!-- Simple selector -->
         <setting label="32402" type="bool" id="use_simple_selector" default="false"/>
 
+        <!-- Attempt to hide keyboard -->
+        <setting label="32403" type="bool" id="advanced_keyboard_hacks" default="false" enable="eq(-1,false)"/>
+        
         <!-- Clear cache -->
         <setting label="32401" type="action" action="RunPlugin(plugin://plugin.video.meta/clear_cache)"/>        
         
