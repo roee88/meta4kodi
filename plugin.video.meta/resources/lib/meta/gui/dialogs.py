@@ -4,16 +4,21 @@ from xbmcswift2 import xbmc, xbmcgui, xbmcaddon
 from meta import plugin
 from settings import SETTING_ADVANCED_KEYBOARD_HACKS
 
-def wait_for_dialog(dialog_id, timeout=None, interval=500):
+def wait_for_dialog(dialog, timeout=None, interval=500):
+    return wait_for_any_dialog([dialog], timeout, interval)
+    
+def wait_for_any_dialog(dialogs, timeout=None, interval=500):
     start = time.time()
     
-    while not xbmc.getCondVisibility("Window.IsActive(%s)" % dialog_id):
-        if xbmc.abortRequested or \
-         (timeout and time.time() - start >= timeout):
-            return False
-        xbmc.sleep(interval)
+    while not xbmc.abortRequested and (not timeout or time.time() - start < timeout):
+        any_active = bool(filter(bool, [xbmc.getCondVisibility("Window.IsActive(%s)" % x) for x in dialogs]))
         
-    return True
+        if any_active:
+            return True            
+    
+        xbmc.sleep(interval)
+    
+    return False
     
 def ok(title, msg):
     xbmcgui.Dialog().ok(title, msg)
@@ -29,10 +34,11 @@ def multiselect(title, items):
 
 	
 def select_ext(title, populator, tasks_count):
-    with ExtendedDialogHacks():
-        addonPath = xbmcaddon.Addon().getAddonInfo('path').decode('utf-8')
-        dlg = SelectorDialog("DialogSelect.xml", addonPath, title = title, 
-                populator = populator, steps=tasks_count)
+    addonPath = xbmcaddon.Addon().getAddonInfo('path').decode('utf-8')
+    dlg = SelectorDialog("DialogSelect.xml", addonPath, title = title, 
+            populator = populator, steps=tasks_count)
+    
+    with ExtendedDialogHacks(dlg):
         dlg.doModal()
         selection = dlg.get_selection()
         del dlg
@@ -50,18 +56,43 @@ class FanArtWindow(xbmcgui.WindowDialog):
         self.addControl(fanart)
 
 class ExtendedDialogHacks(object):
+    def __init__(self, dlg):
+        self.dlg = dlg
+        self.active = False
+    
     def __enter__(self):
+        self.active = True
+        
+        self.numeric_keyboard = None
         self.fanart_window = FanArtWindow()
         
-        self.numeric_keyboard = None         
+        ## Keyboard hack
         if plugin.get_setting(SETTING_ADVANCED_KEYBOARD_HACKS, converter=bool):
             self.numeric_keyboard = xbmcgui.Window(10109)
             Thread(target = lambda: self.numeric_keyboard.show()).start()
             wait_for_dialog('numericinput', interval=50)
-            
+        
+        # Show fanart background         
         self.fanart_window.show()
-
+        
+        # Run background task
+        Thread(target = self.background_task).start()
+    
+    def background_task(self):
+        xbmc.sleep(1000)
+        while not xbmc.abortRequested and self.active:
+            active_window = xbmcgui.getCurrentWindowDialogId()
+            if active_window in [10101,10151,10107]:
+                xbmc.executebuiltin("Dialog.Close(%d, true)" % active_window)
+            if xbmc.getCondVisibility("Window.IsActive(infodialog)"):
+                xbmc.executebuiltin('Dialog.Close(infodialog, true)')
+                
+            xbmc.sleep(100)
+        del self.dlg
+        
     def __exit__(self, exc_type, exc_value, traceback):
+        self.active = False
+        
         if self.numeric_keyboard is not None:
             self.numeric_keyboard.close()
             del self.numeric_keyboard
@@ -88,13 +119,7 @@ class SelectorDialog(xbmcgui.WindowXMLDialog):
     def get_selection(self):
         """ get final selection """
         return self.selection
-        
-    def __del__(self):
-        pass
-#        xbmcgui.WindowXMLDialog.__del__()
-#        if self.thread:
-#            self.thread.join()
-        
+    
     def onInit(self):
         # set title
         self.label = self.getControl(1)
@@ -187,10 +212,10 @@ class SelectorDialog(xbmcgui.WindowXMLDialog):
     def step(self):
         self.completed_steps += 1
         progress = self.completed_steps * 100 / self.steps 
-        self.label.setLabel(u"{0} - {1:d}%".format(self.title, progress))
+        self.label.setLabel(u"{0} - {1:d}% ({2}/{3})".format(self.title, progress, 
+            self.completed_steps, self.steps))
         
     def _populate(self):
-        #time.sleep(1)
         self.label.setLabel(self.title)
         for result in self.populator():
             self.step()
