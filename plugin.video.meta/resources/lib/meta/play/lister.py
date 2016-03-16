@@ -1,6 +1,6 @@
 import re
 import copy
-from threading import Event, Thread, RLock, current_thread
+from threading import Event, Thread, RLock, Lock, current_thread
 from xbmcswift2 import xbmc, xbmcgui
 
 from meta import plugin
@@ -11,12 +11,13 @@ from meta.utils.rpc import RPC
 # These are replace with whitespace in labels and parameters
 IGNORE_CHARS = ('.', '%20')#('+', '-', '%20', '.', ' ')
 
+ 
 class KeyboardMonitor(Thread):
     def __init__(self):
         Thread.__init__(self)
         
         self.active = True
-        self.lock = RLock()
+        self.lock = Lock()
         self.search_term = None
     
     def stop(self):
@@ -37,8 +38,10 @@ class KeyboardMonitor(Thread):
                 if self.search_term is not None:
                     # Send search term
                     RPC.Input.SendText(text=self.search_term, done=True)
+                    # TODO: needed?
                     while xbmc.getCondVisibility("Window.IsActive(virtualkeyboard)"):
                         xbmc.sleep(100)
+                    self.release()
 
 def regex_escape(string):
     for c in ".$^{[(|)*+?\\":
@@ -225,9 +228,9 @@ class Lister:
                 if xbmc.getCondVisibility("Window.IsActive(infodialog)"):
                     xbmc.executebuiltin('Dialog.Close(infodialog, true)')
                 if keyboard_hint is not None:
-                    while xbmc.getCondVisibility("Window.IsActive(virtualkeyboard)"):
-                        xbmc.sleep(100)                    
-                    self.keyboardMonitor.release()
+                    #while xbmc.getCondVisibility("Window.IsActive(virtualkeyboard)"):
+                    #    xbmc.sleep(100)
+                    #self.keyboardMonitor.release()
                     keyboard_hint = None
                     
                 self._restore_viewid()
