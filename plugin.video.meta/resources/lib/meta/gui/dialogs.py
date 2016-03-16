@@ -28,22 +28,16 @@ def multiselect(title, items):
 
 	
 def select_ext(title, populator, tasks_count):
-    window = FanArtWindow()
-    window.show()
-    try:
-    
+    with ExtendedDialogHacks():
         addonPath = xbmcaddon.Addon().getAddonInfo('path').decode('utf-8')
         dlg = SelectorDialog("DialogSelect.xml", addonPath, title = title, 
                 populator = populator, steps=tasks_count)
         dlg.doModal()
         selection = dlg.get_selection()
         del dlg
-    finally:
-        window.close()
-        del window
-	
+        
     return selection
-	
+
 class FanArtWindow(xbmcgui.WindowDialog):
     def __init__(self):
         fanart = xbmc.getInfoLabel('ListItem.Property(Fanart_Image)')
@@ -53,7 +47,23 @@ class FanArtWindow(xbmcgui.WindowDialog):
         
         fanart = xbmcgui.ControlImage(0, 0, 1280, 720, fanart)
         self.addControl(fanart)
+
+class ExtendedDialogHacks(object):
+    def __enter__(self):
+        self.fanart_window = FanArtWindow()
+        self.numeric_keyboard = xbmcgui.Window(10109)
         
+        Thread(target = lambda: self.numeric_keyboard.show()).start()
+        wait_for_dialog('numericinput', interval=50)
+        self.fanart_window.show()
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.numeric_keyboard.close()
+        del self.numeric_keyboard
+        xbmc.executebuiltin("Dialog.Close(numericinput, true)")
+        self.fanart_window.close()
+        del self.fanart_window
+            
 class SelectorDialog(xbmcgui.WindowXMLDialog):    
     def __init__(self, *args, **kwargs):
         xbmcgui.WindowXMLDialog.__init__(self)
