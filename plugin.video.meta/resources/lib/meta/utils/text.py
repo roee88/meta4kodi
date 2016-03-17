@@ -118,6 +118,7 @@ def apply_parameters(text, parameters):
             missing_key = e.args[0]
             new_val = apply_text_actions(missing_key, parameters)
             if new_val is not None:
+                parameters = dict(parameters)
                 parameters[missing_key] = new_val 
             else:
                 raise e
