@@ -47,13 +47,13 @@ def select_ext(title, populator, tasks_count):
 
 class FanArtWindow(xbmcgui.WindowDialog):
     def __init__(self):
-        fanart = xbmc.getInfoLabel('ListItem.Property(Fanart_Image)')
-
-        background = xbmcgui.ControlImage(0, 0, 1280, 720, plugin.addon.getAddonInfo('fanart'))
-        self.addControl(background)
+        control_background = xbmcgui.ControlImage(0, 0, 1280, 720, plugin.addon.getAddonInfo('fanart'))
+        self.addControl(control_background)
         
-        fanart = xbmcgui.ControlImage(0, 0, 1280, 720, fanart)
-        self.addControl(fanart)
+        fanart = xbmc.getInfoLabel('ListItem.Property(Fanart_Image)')
+        if fanart and fanart != "Fanart_Image":
+            control_fanart = xbmcgui.ControlImage(0, 0, 1280, 720, fanart)
+            self.addControl(control_fanart)
 
 class ExtendedDialogHacks(object):
     def __init__(self, dlg):
@@ -216,6 +216,7 @@ class SelectorDialog(xbmcgui.WindowXMLDialog):
             self.completed_steps, self.steps))
         
     def _populate(self):
+        xbmc.sleep(500) # Delay population to let ui settle
         self.label.setLabel(self.title)
         for result in self.populator():
             self.step()
