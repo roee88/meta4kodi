@@ -5,7 +5,7 @@ from xbmcswift2 import xbmc, xbmcgui
 
 from meta import plugin
 from meta.gui import dialogs
-from meta.utils.text import urlencode_path, to_utf8, to_unicode
+from meta.utils.text import urlencode_path, to_utf8, to_unicode, apply_parameters
 from meta.utils.rpc import RPC
 
 # These are replace with whitespace in labels and parameters
@@ -151,8 +151,8 @@ class Lister:
             first_season = True
             
         # Apply parameters to pattern
-        pattern = pattern.format(**parameters)
-       
+        pattern = apply_parameters(pattern, parameters)    
+        
         # Remove special chars
         for c in IGNORE_CHARS:
             #pattern = pattern.replace("\\"+c, ' ')

@@ -1,7 +1,11 @@
 import copy
 import urllib
 import time
+import re
 from urlparse import urlparse, parse_qs, urlunparse
+#from xml.sax.saxutils import unescape as xml_unescape
+    
+ACTION_REGEX = re.compile("(.*?)\((.*)\)")
     
 def to_utf8(obj):
     if isinstance(obj, unicode):
@@ -75,3 +79,47 @@ def date_to_timestamp(date_str, format="%Y-%m-%d"):
         except:
             return 0 # 1970
     return None
+
+def apply_text_actions(text, dictionary):
+    def unescape(x):
+        #x = xml_unescape(x)
+        #x = x.strip()
+        x = x.replace('&dot;', '.')
+        x = x.replace('&sbo;', '[')
+        x = x.replace('&sbc;', ']')
+        x = x.replace('&colon;', ':')
+        return x
+        
+    splitted_text = text.split('|')
+    if splitted_text[0] in dictionary:
+        value = dictionary.get(splitted_text[0])
+        for action in splitted_text[1:]:
+            match = ACTION_REGEX.match(action)
+            if match:
+                action, params = match.groups()
+                params = [unescape(x) for x in params.split(',')]
+                
+                if action == "ws":
+                    value = value.replace(' ', params[0])
+                elif action == "replace":
+                    value = value.replace(params[0], params[1])
+                else:
+                    pass
+        return value
+            
+    return None
+
+def apply_parameters(text, parameters):
+    while True:
+        try:
+            text = text.format(**parameters)
+        except KeyError, e:
+            # Auto generate missing parameters if possible
+            missing_key = e.args[0]
+            new_val = apply_text_actions(missing_key, parameters)
+            if new_val is not None:
+                parameters[missing_key] = new_val 
+            else:
+                raise e
+        else:
+            return text

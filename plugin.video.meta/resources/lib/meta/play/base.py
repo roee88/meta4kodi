@@ -4,7 +4,7 @@ from xbmcswift2 import xbmc, xbmcgui
 from meta import plugin
 from meta.gui import dialogs
 from meta.utils.executor import execute
-from meta.utils.text import to_unicode, urlencode_path
+from meta.utils.text import to_unicode, urlencode_path, apply_parameters
 from meta.library.tools import get_movie_from_library, get_episode_from_library
 from meta.play.players import get_players
 from meta.play.lister import Lister
@@ -117,7 +117,7 @@ def resolve_player(player, lister, params):
                 
             parameters = params[lang]
             try:
-                link = to_unicode(command["link"]).format(**parameters)
+                link = apply_parameters(to_unicode(command["link"]), parameters)
             except:
                 print_exc()
                 continue
@@ -141,15 +141,15 @@ def resolve_player(player, lister, params):
                 command_group_results.append(
                     {
                         'label': player.title,
-                        'path': urlencode_path(link),  # TODO: or replace(" ", "%20")?
-                        'action': command.get("action", "RESOLVE")
+                        'path': urlencode_path(link),
+                        'action': command.get("action", "PLAY")
                     }
                 )
                 
             else:
                 steps = [to_unicode(step) for step in command["steps"]]
                 files, dirs = lister.get(link, steps, parameters)
-                if command.get("action", "RESOLVE") == "ACTIVATE":
+                if command.get("action", "PLAY") == "ACTIVATE":
                     files += dirs
 
                 if files:
@@ -157,7 +157,7 @@ def resolve_player(player, lister, params):
                         {
                             'label': f['label'],
                             'path': player.postprocess(f['path']),
-                            'action': command.get("action", "RESOLVE")
+                            'action': command.get("action", "PLAY")
                         } for f in files]
             
             if command_group_results:
