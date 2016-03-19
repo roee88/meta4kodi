@@ -131,8 +131,11 @@ def get_episode_parameters(show, season, episode):
     network = show.get('network', '')
     
     parameters['network'] = network
-    parameters['network_clean'] = re.sub("(\(.*?\))", "", network).strip()
-    
+    if network:
+        parameters['network_clean'] = re.sub("(\(.*?\))", "", network).strip()
+    else:
+        parameters['network_clean'] = network
+        
     parameters['showname'] = show['seriesname']
     #parameters['clearname'], _ = xbmc.getCleanMovieTitle(parameters['showname'])
     parameters['clearname'] = re.sub("(\(.*?\))", "", show['seriesname']).strip()
