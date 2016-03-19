@@ -31,20 +31,29 @@ class KeyboardMonitor(Thread):
         if self.search_term is not None:
             self.search_term = None
             self.lock.release()
-                
+            
+    def prep_search_str(self, text):
+        t_text = to_unicode(text)
+        for chr in t_text:
+            if ord(chr) >= 1488 and ord(chr) <= 1514:
+                return to_utf8(text[::-1])
+        return to_utf8(text)
+
     def run(self):
         while self.active and not xbmc.abortRequested:
             if dialogs.wait_for_dialog("virtualkeyboard", timeout=5,interval=100):
                 if self.search_term is not None:
+                    xbmc.executebuiltin('Dialog.Close(virtualkeyboard, true)')
                     # Send search term
-                    RPC.Input.SendText(text=self.search_term, done=True)
+                    text = self.prep_search_str(self.search_term)
+                    RPC.Input.SendText(text=text, done=True)
                     # TODO: needed?
                     while xbmc.getCondVisibility("Window.IsActive(virtualkeyboard)"):
                         xbmc.sleep(100)
                     self.release()
 
 def regex_escape(string):
-    for c in ".$^{[(|)*+?\\":
+    for c in "\\.$^{[(|)*+?":
         string = string.replace(c, "\\"+c)
     return string
     
@@ -91,8 +100,18 @@ class Lister:
         self.keyboardMonitor.start()
         
     def get(self, path, guidance, parameters):            
+        # Escape parameters
+        unescaped_parameters = parameters
+        parameters = copy.deepcopy(parameters)
+        for key, value in parameters.items():
+            if isinstance(value, basestring):
+                for c in IGNORE_CHARS:
+                    value = value.replace(c, ' ')
+                #parameters[key] = re.escape(value)
+                parameters[key] = regex_escape(value)
+        
         try:
-            return self._browse_external(path, guidance, parameters)
+            return self._browse_external(path, guidance, parameters, unescaped_parameters)
         finally:
             self._restore_viewid()
 
@@ -185,18 +204,8 @@ class Lister:
 
     def _restore_viewid(self):
         xbmc.executebuiltin("Container.SetViewMode(%d)" % self.preserve_viewid)
-        
-    def _browse_external(self, path, guidance, parameters):
-        # Escape parameters
-        unescaped_parameters = parameters
-        parameters = copy.deepcopy(parameters)
-        for key, value in parameters.items():
-            if isinstance(value, basestring):
-                for c in IGNORE_CHARS:
-                    value = value.replace(c, ' ')
-                #parameters[key] = re.escape(value)
-                parameters[key] = regex_escape(value)
-        
+    
+    def _browse_external(self, path, guidance, parameters, unescaped_parameters, depth=0):
         result_dirs = []
         result_files = []
         
@@ -212,8 +221,12 @@ class Lister:
                 break
 
             # Send keyboard data iff not last guidance
-            if hint.startswith("keyboard:") and i != len(guidance) - 1:
-                term = hint[len("keyboard:"):].lstrip()
+            # TODO backward compatibility
+            if hint.startswith("keyboard:"):
+                hint = u"@" + hint
+                
+            if hint.startswith("@keyboard:") and i != len(guidance) - 1:
+                term = hint[len("@keyboard:"):].lstrip()
                 term = term.format(**unescaped_parameters)
                 self.keyboardMonitor.set_term(term)
                 keyboard_hint = term
@@ -228,29 +241,49 @@ class Lister:
                 if xbmc.getCondVisibility("Window.IsActive(infodialog)"):
                     xbmc.executebuiltin('Dialog.Close(infodialog, true)')
                 if keyboard_hint is not None:
-                    #while xbmc.getCondVisibility("Window.IsActive(virtualkeyboard)"):
-                    #    xbmc.sleep(100)
-                    #self.keyboardMonitor.release()
                     keyboard_hint = None
                     
                 self._restore_viewid()
-            
-            # Get matching directories
-            matched_dirs = [x for x in dirs \
-             if Lister._has_match(x, hint, parameters)]
-            
-            # Next path is first matched directory
+                
             path = None
-            if matched_dirs:
-                path = matched_dirs[0]['path']
-
-            # Last hint
-            if i == len(guidance) - 1:
-                # Get matching files
-                result_files = [x for x in files \
+            
+            if hint == "@any":
+                for dir in dirs:
+                    rec_files, rec_dirs = self._browse_external(dir['path'], guidance[i+1:], parameters, unescaped_parameters, depth)
+                    result_files += rec_files
+                    result_dirs += rec_dirs
+                    if result_files:
+                        break            
+            else:
+                next_page_hint = None
+                if "@page:" in hint:
+                    hint, next_page_hint = hint.split("@page:")
+                
+                # Get matching directories
+                matched_dirs = [x for x in dirs \
                  if Lister._has_match(x, hint, parameters)]
-                result_dirs = matched_dirs
-                           
+
+                # Next path is first matched directory
+                if matched_dirs:
+                    path = matched_dirs[0]['path']
+
+                # Last hint
+                if i == len(guidance) - 1:
+                    # Get matching files
+                    result_files = [x for x in files \
+                     if Lister._has_match(x, hint, parameters)]
+                    result_dirs = matched_dirs
+                
+                if next_page_hint and depth < 10 and path is None and not result_files:
+                    next_page_dirs = [x for x in dirs \
+                     if Lister._has_match(x, next_page_hint, parameters)]
+                    if next_page_dirs:
+                        rec_files, rec_dirs = self._browse_external(next_page_dirs[0]['path'], guidance[i:], parameters, unescaped_parameters, depth+1)
+                        result_files += rec_files
+                        result_dirs += rec_dirs
+                        if result_files:
+                            break
+                
         # Always return some list (and not None)
         result_files = result_files or []
         result_dirs = result_dirs or []
