@@ -2,23 +2,18 @@ import time
 from threading import Thread, RLock
 from xbmcswift2 import xbmc, xbmcgui, xbmcaddon
 from meta import plugin
-from settings import SETTING_ADVANCED_KEYBOARD_HACKS
+from settings import *
 
-def wait_for_dialog(dialog, timeout=None, interval=500):
-    return wait_for_any_dialog([dialog], timeout, interval)
-    
-def wait_for_any_dialog(dialogs, timeout=None, interval=500):
+def wait_for_dialog(dialog_id, timeout=None, interval=500):
     start = time.time()
     
-    while not xbmc.abortRequested and (not timeout or time.time() - start < timeout):
-        any_active = bool(filter(bool, [xbmc.getCondVisibility("Window.IsActive(%s)" % x) for x in dialogs]))
-        
-        if any_active:
-            return True            
-    
+    while not xbmc.getCondVisibility("Window.IsActive(%s)" % dialog_id):
+        if xbmc.abortRequested or \
+         (timeout and time.time() - start >= timeout):
+            return False
         xbmc.sleep(interval)
-    
-    return False
+        
+    return True
     
 def ok(title, msg):
     xbmcgui.Dialog().ok(title, msg)
@@ -38,7 +33,7 @@ def select_ext(title, populator, tasks_count):
     dlg = SelectorDialog("DialogSelect.xml", addonPath, title = title, 
             populator = populator, steps=tasks_count)
     
-    with ExtendedDialogHacks(dlg):
+    with ExtendedDialogHacks():
         dlg.doModal()
         selection = dlg.get_selection()
         del dlg
@@ -56,47 +51,58 @@ class FanArtWindow(xbmcgui.WindowDialog):
             self.addControl(control_fanart)
 
 class ExtendedDialogHacks(object):
-    def __init__(self, dlg):
-        self.dlg = dlg
+    def __init__(self):
         self.active = False
-    
+        
+        self.hide_progress = False
+        self.hide_info = False
+        
+        self.autohidedialogs = plugin.get_setting(SETTING_AUTO_HIDE_DIALOGS, converter=bool)
+        if self.autohidedialogs:
+            self.hide_progress = plugin.get_setting(SETTING_AUTO_HIDE_DIALOGS_PROGRESS, converter=bool)
+            self.hide_info = plugin.get_setting(SETTING_AUTO_HIDE_DIALOGS_INFO, converter=bool)
+        
+        if not self.hide_progress and not self.hide_info:
+            self.autohidedialogs = False
+        
     def __enter__(self):
         self.active = True
         
-        self.numeric_keyboard = None
+#        self.numeric_keyboard = None
         self.fanart_window = FanArtWindow()
         
         ## Keyboard hack
-        if plugin.get_setting(SETTING_ADVANCED_KEYBOARD_HACKS, converter=bool):
-            self.numeric_keyboard = xbmcgui.Window(10109)
-            Thread(target = lambda: self.numeric_keyboard.show()).start()
-            wait_for_dialog('numericinput', interval=50)
+#        if plugin.get_setting(SETTING_ADVANCED_KEYBOARD_HACKS, converter=bool):
+#            self.numeric_keyboard = xbmcgui.Window(10109)
+#            Thread(target = lambda: self.numeric_keyboard.show()).start()
+#            wait_for_dialog('numericinput', interval=50)
         
         # Show fanart background         
         self.fanart_window.show()
         
         # Run background task
-        Thread(target = self.background_task).start()
+        if self.autohidedialogs:
+            Thread(target = self.background_task).start()
     
     def background_task(self):
         xbmc.sleep(1000)
         while not xbmc.abortRequested and self.active:
-            active_window = xbmcgui.getCurrentWindowDialogId()
-            if active_window in [10101,10151,10107]:
-                xbmc.executebuiltin("Dialog.Close(%d, true)" % active_window)
-            if xbmc.getCondVisibility("Window.IsActive(infodialog)"):
-                xbmc.executebuiltin('Dialog.Close(infodialog, true)')
-                
+            if self.hide_progress:
+                active_window = xbmcgui.getCurrentWindowDialogId()
+                if active_window in [10101,10151]:
+                    xbmc.executebuiltin("Dialog.Close(%d, true)" % active_window)
+            if self.hide_info:
+                if xbmc.getCondVisibility("Window.IsActive(infodialog)"):
+                    xbmc.executebuiltin('Dialog.Close(infodialog, true)')                
             xbmc.sleep(100)
-        del self.dlg
         
     def __exit__(self, exc_type, exc_value, traceback):
         self.active = False
         
-        if self.numeric_keyboard is not None:
-            self.numeric_keyboard.close()
-            del self.numeric_keyboard
-            xbmc.executebuiltin("Dialog.Close(numericinput, true)")
+#        if self.numeric_keyboard is not None:
+#            self.numeric_keyboard.close()
+#            del self.numeric_keyboard
+#            xbmc.executebuiltin("Dialog.Close(numericinput, true)")
         
         self.fanart_window.close()
         del self.fanart_window

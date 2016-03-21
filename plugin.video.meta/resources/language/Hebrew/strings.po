@@ -87,9 +87,33 @@ msgctxt "#32304"
 msgid "Automatic movies library server"
 msgstr "שרת עבור קיר סרטים אוטומטי"
 
+msgctxt "#32305"
+msgid "Set added time to release date"
+msgstr "קבע זמן הוספה כזמן שחרור הסרט או פרק"
+
 msgctxt "#32402"
 msgid "Use simple selection dialog"
 msgstr "השתמש בדיאלוג בחירה פשוט"
+
+msgctxt "#32404"
+msgid "Number of simultaneous searches"
+msgstr "מספר חיפושים לבצע במקביל"
+
+msgctxt "#32410"
+msgid "Attempt to hide dialogs while Meta is searching"
+msgstr "הסתר חלונות משנה בזמן שהתוסף מבצע חיפוש"
+
+msgctxt "#32411"
+msgid "הסתר חלון התקדמות"
+msgstr ""
+
+msgctxt "#32412"
+msgid "הסתר התראות מידע"
+msgstr ""
+
+msgctxt "#32413"
+msgid "הסתר מקלדת"
+msgstr ""
 
 msgctxt "#31000"
 msgid "Would you like to automatically set Meta as a movies video source?"

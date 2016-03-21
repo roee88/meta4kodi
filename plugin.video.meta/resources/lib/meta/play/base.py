@@ -9,7 +9,7 @@ from meta.library.tools import get_movie_from_library, get_episode_from_library
 from meta.play.players import get_players
 from meta.play.lister import Lister
 
-from settings import SETTING_MOVIES_ENABLED_PLAYERS, SETTING_TV_ENABLED_PLAYERS
+from settings import *
 from language import get_string as _
 
 
@@ -79,7 +79,8 @@ def get_video_link(players, params, mode, use_simple=False):
             pDialog = xbmcgui.DialogProgress()
             pDialog.create('Meta', 'Working...')
             dialogs.wait_for_dialog("progressdialog", 5)
-            populator = lambda : execute(resolve_f, players, lister.stop_flag)
+            pool_size = plugin.get_setting(SETTING_POOL_SIZE, converter=int)
+            populator = lambda : execute(resolve_f, players, lister.stop_flag, pool_size)
             selection = dialogs.select_ext(_("Play with..."), populator, len(players))
             
         else:

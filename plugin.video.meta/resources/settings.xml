@@ -42,6 +42,10 @@
     
     <!-- Library -->
     <category label="32300">
+        <!-- Force library update -->
+        <setting label="32303" type="action" action="RunPlugin(plugin://plugin.video.meta/update_library)"/>
+        
+        <!-- Set date to release date -->
         <setting label="32305" type="bool" id="library_set_date" default="false"/>
 
         <!-- Movies -->
@@ -65,16 +69,24 @@
         
         <!-- Simple selector -->
         <setting label="32402" type="bool" id="use_simple_selector" default="false"/>
+        
 
-        <!-- Attempt to hide keyboard -->
-        <setting label="32403" type="bool" id="advanced_keyboard_hacks" default="false" enable="eq(-1,false)"/>
+        <!-- Attempt to hide dialogs -->
+        <setting label="32410" type="bool" id="auto_hide_dialogs" default="false" enable="eq(-1,false)"/>
+        
+            <setting subsetting="true" label="32411" type="bool" id="auto_hide_dialogs_progress" default="true" enable="eq(-1,true)"/>
+
+            <setting subsetting="true" label="32412" type="bool" id="auto_hide_dialogs_info" default="true" enable="eq(-2,true)"/>
+            
+            <setting subsetting="true" label="32413" type="bool" id="auto_hide_dialogs_keyboard" default="true" enable="eq(-3,true)"/>
+            
+            
+        <!-- Simple selector -->
+        <setting label="32404" type="slider" id="pool_size" default="5" range="1,15" option="int" />
         
         <!-- Clear cache -->
         <setting label="32401" type="action" action="RunPlugin(plugin://plugin.video.meta/clear_cache)"/>        
         
-        <!-- Force library update -->
-        <setting label="32303" type="action" action="RunPlugin(plugin://plugin.video.meta/update_library)"/>
-
         
     </category>
     

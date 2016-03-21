@@ -11,6 +11,8 @@ from meta.utils.rpc import RPC
 # These are replace with whitespace in labels and parameters
 IGNORE_CHARS = ('.', '%20')#('+', '-', '%20', '.', ' ')
 
+from settings import *
+
  
 class KeyboardMonitor(Thread):
     def __init__(self):
@@ -19,7 +21,9 @@ class KeyboardMonitor(Thread):
         self.active = True
         self.lock = Lock()
         self.search_term = None
-    
+
+        self.hide_keyboard = plugin.get_setting(SETTING_AUTO_HIDE_DIALOGS, converter=bool) and plugin.get_setting(SETTING_AUTO_HIDE_DIALOGS_KEYBOARD, converter=bool)
+        
     def stop(self):
         self.active = False
                 
@@ -43,13 +47,15 @@ class KeyboardMonitor(Thread):
         while self.active and not xbmc.abortRequested:
             if dialogs.wait_for_dialog("virtualkeyboard", timeout=5,interval=100):
                 if self.search_term is not None:
-                    xbmc.executebuiltin('Dialog.Close(virtualkeyboard, true)')
+                    if self.hide_keyboard:
+                        xbmc.executebuiltin('Dialog.Close(virtualkeyboard, true)')
+                        
                     # Send search term
                     text = self.prep_search_str(self.search_term)
                     RPC.Input.SendText(text=text, done=True)
                     # TODO: needed?
-                    while xbmc.getCondVisibility("Window.IsActive(virtualkeyboard)"):
-                        xbmc.sleep(100)
+                    #while xbmc.getCondVisibility("Window.IsActive(virtualkeyboard)"):
+                    #    xbmc.sleep(100)
                     self.release()
 
 def regex_escape(string):
@@ -238,8 +244,9 @@ class Lister:
             except:
                 break
             finally:
-                if xbmc.getCondVisibility("Window.IsActive(infodialog)"):
-                    xbmc.executebuiltin('Dialog.Close(infodialog, true)')
+                #if xbmc.getCondVisibility("Window.IsActive(infodialog)"):
+                #    xbmc.executebuiltin('Dialog.Close(infodialog, true)')
+                
                 if keyboard_hint is not None:
                     keyboard_hint = None
                     

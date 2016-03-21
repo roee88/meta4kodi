@@ -95,8 +95,24 @@ msgctxt "#32402"
 msgid "Use simple selection dialog"
 msgstr ""
 
-msgctxt "#32403"
-msgid "Attempt to hide keyboard while Meta is searching (may not work or cause issues on some skins)"
+msgctxt "#32404"
+msgid "Number of simultaneous searches"
+msgstr ""
+
+msgctxt "#32410"
+msgid "Attempt to hide dialogs while Meta is searching"
+msgstr ""
+
+msgctxt "#32411"
+msgid "Hide progress dialogs"
+msgstr ""
+
+msgctxt "#32412"
+msgid "Hide information dialogs"
+msgstr ""
+
+msgctxt "#32413"
+msgid "Hide keyboard dialog"
 msgstr ""
 
 msgctxt "#31000"
