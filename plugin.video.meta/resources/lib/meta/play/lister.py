@@ -13,14 +13,16 @@ IGNORE_CHARS = ('.', '%20')#('+', '-', '%20', '.', ' ')
 
 from settings import *
 
- 
+                
 class KeyboardMonitor(Thread):
     def __init__(self):
         Thread.__init__(self)
         
         self.active = True
-        self.lock = Lock()
         self.search_term = None
+        self.owner_thread = None
+        self.lock = Lock()
+        self.access_lock = RLock()
 
         self.hide_keyboard = plugin.get_setting(SETTING_AUTO_HIDE_DIALOGS, converter=bool) and plugin.get_setting(SETTING_AUTO_HIDE_DIALOGS_KEYBOARD, converter=bool)
         
@@ -29,13 +31,21 @@ class KeyboardMonitor(Thread):
                 
     def set_term(self, search_term):
         self.lock.acquire()
+        self.owner_thread = current_thread()
         self.search_term = search_term
         
     def release(self):
-        if self.search_term is not None:
-            self.search_term = None
-            self.lock.release()
-            
+        with self.access_lock:
+            if self.owner_thread is not None:
+                self.search_term = None
+                self.owner_thread = None
+                self.lock.release()
+                
+    def release_if_owner(self):
+        with self.access_lock:
+            if self.owner_thread is current_thread():
+                self.release()
+                    
     def prep_search_str(self, text):
         t_text = to_unicode(text)
         for chr in t_text:
@@ -248,8 +258,8 @@ class Lister:
                 #    xbmc.executebuiltin('Dialog.Close(infodialog, true)')
                 
                 if keyboard_hint is not None:
+                    self.keyboardMonitor.release_if_owner()
                     keyboard_hint = None
-                    
                 self._restore_viewid()
                 
             path = None
