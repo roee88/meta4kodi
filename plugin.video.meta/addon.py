@@ -19,6 +19,7 @@ from meta.play.players import get_players, ADDON_SELECTOR
 
 import meta.navigation.movies
 import meta.navigation.tvshows
+import meta.navigation.traktlists
 from meta.navigation.base import get_icon_path
 from meta.play.base import active_players
 
@@ -27,6 +28,7 @@ import meta.library.movies
 
 from language import get_string as _
 from settings import *
+import trakt.trakt
 
 @plugin.route('/')
 def root():
@@ -40,6 +42,11 @@ def root():
         {
             'label': _("TV Shows"),
             'path': plugin.url_for("tv"),
+            'icon': get_icon_path("tv"),
+        },
+        {
+            'label': _("Trakt"),
+            'path': plugin.url_for("trakt"),
             'icon': get_icon_path("tv"),
         },
     ]
