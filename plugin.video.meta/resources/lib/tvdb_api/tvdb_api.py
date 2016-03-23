@@ -85,8 +85,8 @@ class Season(dict):
     def __getitem__(self, episode_number):
         return dict.__getitem__(self, episode_number)
         
-    def has_aired(self):
-        if len(self.keys()) > 0 and self.values()[0].has_aired():
+    def has_aired(self, flexible=False):
+        if len(self.keys()) > 0 and self.values()[0].has_aired(flexible):
             return True
         return False
         
@@ -128,9 +128,9 @@ class Episode(dict):
                 pass
         return -1
     
-    def has_aired(self):
+    def has_aired(self, flexible=False):
         if not self.get('firstaired', None):
-            return False
+            return flexible
         return self.get_air_time() <= time.time()
         
 class Tvdb:

@@ -102,7 +102,6 @@ def add_tvshow_to_library(library_folder, show, play_plugin = None):
         libepisodes = []
     
     ## Create content strm files
-    next_forced_update = 0
     for (season_num,season) in show.items():
         if season_num == 0: # or not season.has_aired():
             continue
@@ -111,33 +110,21 @@ def add_tvshow_to_library(library_folder, show, play_plugin = None):
             if episode_num == 0:
                 continue
             
-            if not episode.has_aired():
-                next_forced_update = episode.get_air_time()
-                break
+            delete = False
+            if not episode.has_aired(flexible=True):
+                delete = True
+                #break
             
-            if (season_num, episode_num) in libepisodes:
+            if delete or (season_num, episode_num) in libepisodes:
                 if library_tv_remove_strm(show, show_folder, id, season_num, episode_num):
                     clean_needed = True
             else:
                 library_tv_strm(show, show_folder, id, season_num, episode_num)
 
-        #if next_forced_update:
-        #    break
-
     files, dirs = xbmcvfs.listdir(show_folder)
     if not dirs:
         shutil.rmtree(show_folder)
         clean_needed = True
-    else:
-        # Last updated
-        if show['lastupdated']:
-            try:
-                lastupdated_path = os.path.join(show_folder, "lastupdated")
-                file = xbmcvfs.File(lastupdated_path, "w")
-                file.write("{0} {1}".format(show['lastupdated'], next_forced_update))
-                file.close()
-            except:
-                pass
                 
     return clean_needed
     

@@ -258,7 +258,7 @@ def list_seasons_tvdb(id):
     
     items = []
     for (season_num, season) in show.items():
-        if season_num == 0 or not season.has_aired():
+        if season_num == 0 or not season.has_aired(flexible=True):
             continue
         
         season_info = get_season_metadata_tvdb(show_info, season)
@@ -288,8 +288,8 @@ def list_episodes_tvdb(id, season_num):
     
     items = []
     for (episode_num, episode) in season.items():
-        if episode_num == 0 or not episode.has_aired():
-            continue
+        if episode_num == 0 or not episode.has_aired(flexible=True):
+            break
         
         episode_info = get_episode_metadata_tvdb(season_info, episode)
                         
