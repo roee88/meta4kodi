@@ -9,6 +9,25 @@ def trakt():
     """ Trakt directory """
     items = [
         {
+            'label': "Collections",
+            'path': plugin.url_for(trakt_collections),
+        },
+        {
+            'label': "Watchlists",
+            'path': plugin.url_for(trakt_watchlists),
+        },
+    ]
+
+    fanart = plugin.addon.getAddonInfo('fanart')
+    for item in items:
+        item['properties'] = {'fanart_image' : fanart}
+
+    return items
+
+@plugin.route('/trakt/collections')
+def trakt_collections():
+    items = [
+        {
             'label': "Movie Collection",
             'path': plugin.url_for(trakt_movie_collection),
         },
@@ -16,6 +35,14 @@ def trakt():
             'label': "TV Collection",
             'path': plugin.url_for(trakt_tv_collection),
         },
+    ]
+
+    return items
+
+
+@plugin.route('/trakt/watchlists')
+def trakt_watchlists():
+    items = [
         {
             'label': "Movie Watchlist",
             'path': plugin.url_for(trakt_movie_watchlist),
@@ -24,12 +51,7 @@ def trakt():
             'label': "TV Watchlist",
             'path': plugin.url_for(trakt_tv_watchlist),
         },
-
     ]
-
-    fanart = plugin.addon.getAddonInfo('fanart')
-    for item in items:
-        item['properties'] = {'fanart_image' : fanart}
 
     return items
 
