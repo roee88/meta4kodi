@@ -225,25 +225,27 @@ def trakt_get_next_episodes():
 
 @plugin.route('/trakt/trakt_add_all_from_watchlist/<type>')
 def trakt_add_all_from_watchlist(type):
-    items = trakt_get_watchlist(type)
+    if dialogs.yesno("Add All From Collection", "Are You Sure?"):
+        items = trakt_get_watchlist(type)
 
-    for item in items:
-        if type == "shows":
-            id = item["show"]["ids"]["tvdb"]
-            tv_add_to_library(id)
-        else:
-            id = item["movie"]["ids"]["imdb"]
-            movies_add_to_library(id)
+        for item in items:
+            if type == "shows":
+                id = item["show"]["ids"]["tvdb"]
+                tv_add_to_library(id)
+            else:
+                id = item["movie"]["ids"]["imdb"]
+                movies_add_to_library(id)
 
 
 @plugin.route('/trakt/trakt_add_all_from_collection/<type>')
 def trakt_add_all_from_collection(type):
-    items = trakt_get_collection(type)
+    if dialogs.yesno("Add All From Collection", "Are You Sure?"):
+        items = trakt_get_collection(type)
 
-    for item in items:
-        if type == "shows":
-            id = item["show"]["ids"]["tvdb"]
-            tv_add_to_library(id)
-        else:
-            id = item["movie"]["ids"]["imdb"]
-            movies_add_to_library(id)
+        for item in items:
+            if type == "shows":
+                id = item["show"]["ids"]["tvdb"]
+                tv_add_to_library(id)
+            else:
+                id = item["movie"]["ids"]["imdb"]
+                movies_add_to_library(id)
