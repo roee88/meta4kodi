@@ -169,6 +169,54 @@ def trakt_get_watchlist(type):
     if (response.status_code == 401):
         dialogs.ok("authenticate trakt", "please authenticate with trakt")
         trakt_authenticate()
-        return trakt_get_collection(type)
+        return trakt_get_watchlist(type)
     else:
         return response.json()
+
+
+def trakt_get_calendar():
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + plugin.get_setting(SETTING_TRAKT_ACCESS_TOKEN),
+        'trakt-api-version': '2',
+        'trakt-api-key': CLIENT_ID
+    }
+    response = requests.request(
+        "GET",
+        "https://api-v2launch.trakt.tv/calendars/my/shows",
+        headers=headers)
+
+    if (response.status_code == 401):
+        dialogs.ok("authenticate trakt", "please authenticate with trakt")
+        trakt_authenticate()
+        return trakt_get_calendar(type)
+    else:
+        return response.json()
+
+def trakt_get_next_episodes():
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + plugin.get_setting(SETTING_TRAKT_ACCESS_TOKEN),
+        'trakt-api-version': '2',
+        'trakt-api-key': CLIENT_ID
+    }
+    response = requests.request(
+        "GET",
+        "https://api-v2launch.trakt.tv/sync/watched/shows?extended=noseasons",
+        headers=headers)
+    shows = response.json()
+    items = []
+    for item in shows:
+        show = item["show"]
+        id = show["ids"]["trakt"]
+        response = requests.request(
+        "GET",
+        "https://api-v2launch.trakt.tv/shows/{0}/progress/watched".format(id),
+        headers=headers)
+        response = response.json()
+        if response["next_episode"]:
+            next_episode = response["next_episode"]
+            next_episode["show"] = show["title"]
+            items.append(next_episode)
+
+    return items

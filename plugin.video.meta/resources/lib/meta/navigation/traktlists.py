@@ -2,7 +2,7 @@ from meta import plugin
 from meta.gui import dialogs
 from meta.navigation.base import search, get_icon_path, get_genre_icon, get_genres, get_tv_genres, caller_name, caller_args, get_base_genres
 from meta.navigation.movies import movies_search_term
-from trakt.trakt import trakt_get_collection, trakt_get_watchlist, trakt_get_calendar
+from trakt.trakt import trakt_get_collection, trakt_get_watchlist, trakt_get_calendar,trakt_get_next_episodes
 import time
 
 @plugin.route('/trakt')
@@ -16,6 +16,10 @@ def trakt():
         {
             'label': "Watchlists",
             'path': plugin.url_for(trakt_watchlists),
+        },
+        {
+            'label': "Next Episodes",
+            'path': plugin.url_for(trakt_next_episodes),
         },
         {
             'label': "My Calendar",
@@ -126,7 +130,22 @@ def trakt_calendar():
         airtime = time.strptime(item["first_aired"], "%Y-%m-%dt%H:%M:%S.000Z")
         airtime = time.strftime("%Y-%m-%d %H:%M", airtime)
         items.append({'label': "{0}\n{1}".format(episode_name,airtime),
-                      'path': "plugin://plugin.video.meta/tv/play/{0}/{1}/{2}/default".format(show["ids"]["tvdb"],season,episode)
+                      'path': "plugin://plugin.video.meta/tv/play/{0}/{1}/{2}/default".format(show["ids"]["tvdb"],season,number)
         })
 
+    return items
+
+@plugin.route('/trakt/next_episodes')
+def trakt_next_episodes():
+    episodes = trakt_get_next_episodes()
+    items = []
+    for item in episodes:
+        show_title = item["show"]
+        season = item["season"]
+        number = item["number"]
+        episode_title = item["title"]
+        episode_name = "{0} - S{1}E{2} - {3}".format(show_title, season, number, episode_title)
+        items.append({'label': "{0}".format(episode_name),
+                      'path': "plugin://plugin.video.meta/tv/play/{0}/{1}/{2}/default".format(item["ids"]["tvdb"],season,number)
+        })
     return items
