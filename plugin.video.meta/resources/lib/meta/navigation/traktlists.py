@@ -68,7 +68,7 @@ def trakt_movie_collection():
     for item in movies:
         movie = item["movie"]
         items.append({'label': movie["title"],
-                      'path': "plugin://plugin.video.meta/movies/play/tmdb/" + str(movie["ids"]["tmdb"]) + "/select"
+                      'path': "plugin://plugin.video.meta/movies/play/imdb/" + str(movie["ids"]["imdb"]) + "/select"
         })
 
     return items
@@ -94,7 +94,7 @@ def trakt_movie_watchlist():
     for item in movies:
         movie = item["movie"]
         items.append({'label': movie["title"],
-                      'path': "plugin://plugin.video.meta/movies/play/tmdb/" + str(movie["ids"]["tmdb"]) + "/select"
+                      'path': "plugin://plugin.video.meta/movies/play/imdb/" + str(movie["ids"]["imdb"]) + "/select"
         })
 
     return items
