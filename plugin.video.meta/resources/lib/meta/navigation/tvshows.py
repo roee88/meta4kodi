@@ -149,24 +149,25 @@ def set_library_player(path):
     player_file.close()
             
 @plugin.route('/tv/add_to_library/<id>')
-def tv_add_to_library(id):
+def tv_add_to_library(id,player=None):
     import_tvdb()    
     show = tvdb[int(id)]
     
-    # get active players
-    players = active_players("tvshows", filters = {'network': show.get('network')})
+    if player is None:
+        # get active players
+        players = active_players("tvshows", filters = {'network': show.get('network')})
     
-    # add default and selector options
-    players.insert(0, ADDON_SELECTOR)
-    players.insert(0, ADDON_DEFAULT)
+        # add default and selector options
+        players.insert(0, ADDON_SELECTOR)
+        players.insert(0, ADDON_DEFAULT)
     
-    # let the user select one player
-    selection = dialogs.select(_("Play with..."), [p.title for p in players])
-    if selection == -1:
-        return
+        # let the user select one player
+        selection = dialogs.select(_("Play with..."), [p.title for p in players])
+        if selection == -1:
+            return
         
-    # get selected player
-    player = players[selection]
+        # get selected player
+        player = players[selection]
     
     # setup library folder
     library_folder = setup_library(plugin.get_setting(SETTING_TV_LIBRARY_FOLDER))

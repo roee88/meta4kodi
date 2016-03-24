@@ -9,6 +9,7 @@ from settings import *
 import requests
 import time
 from language import get_string as _
+from meta.play.players import ADDON_DEFAULT
 
 CLIENT_ID = "865d182dbc8d400906a5d6efd074a55f3a26658a9eea56f23d82be2d70541567"
 CLIENT_SECRET = "a6a99ded7c20a15e8f7806f221c18ed48a6f07ff0f46755efad4a69968f4cd70"
@@ -243,7 +244,7 @@ def trakt_add_all_from_watchlist(type):
         for item in items:
             if type == "shows":
                 id = item["show"]["ids"]["tvdb"]
-                tv_add_to_library(id)
+                tv_add_to_library(id,ADDON_DEFAULT)
             else:
                 id = item["movie"]["ids"]["imdb"]
                 movies_add_to_library(id)
@@ -257,10 +258,11 @@ def trakt_add_all_from_collection(type):
         for item in items:
             if type == "shows":
                 id = item["show"]["ids"]["tvdb"]
-                tv_add_to_library(id)
+                tv_add_to_library(id,ADDON_DEFAULT)
             else:
                 id = item["movie"]["ids"]["imdb"]
                 movies_add_to_library(id)
+
 
 @plugin.cached(TTL=CACHE_TTL, cache="trakt")
 def trakt_get_hidden_items(type):
