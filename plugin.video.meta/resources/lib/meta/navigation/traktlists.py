@@ -2,7 +2,8 @@ from meta import plugin
 from meta.gui import dialogs
 from meta.navigation.base import search, get_icon_path, get_genre_icon, get_genres, get_tv_genres, caller_name, caller_args, get_base_genres
 from meta.navigation.movies import movies_search_term
-from trakt.trakt import trakt_get_collection, trakt_get_watchlist
+from trakt.trakt import trakt_get_collection, trakt_get_watchlist, trakt_get_calendar
+import time
 
 @plugin.route('/trakt')
 def trakt():
@@ -15,6 +16,10 @@ def trakt():
         {
             'label': "Watchlists",
             'path': plugin.url_for(trakt_watchlists),
+        },
+        {
+            'label': "My Calendar",
+            'path': plugin.url_for(trakt_calendar),
         },
     ]
 
@@ -103,6 +108,25 @@ def trakt_tv_watchlist():
         show = item["show"]
         items.append({'label': show["title"],
                       'path': "plugin://plugin.video.meta/tv/tvdb/" + str(show["ids"]["tvdb"])
+        })
+
+    return items
+
+@plugin.route('/trakt/calendar')
+def trakt_calendar():
+    shows = trakt_get_calendar()
+    items = []
+    for item in shows:
+        show = item["show"]
+        episode = item["episode"]
+        season = episode["season"]
+        number = episode["number"]
+        episode_title = episode["title"]
+        episode_name = "{0} - S{1}E{2} - {3}".format(show["title"], season, number, episode_title)
+        airtime = time.strptime(item["first_aired"], "%Y-%m-%dt%H:%M:%S.000Z")
+        airtime = time.strftime("%Y-%m-%d %H:%M", airtime)
+        items.append({'label': "{0}\n{1}".format(episode_name,airtime),
+                      'path': "plugin://plugin.video.meta/tv/play/{0}/{1}/{2}/default".format(show["ids"]["tvdb"],season,episode)
         })
 
     return items
