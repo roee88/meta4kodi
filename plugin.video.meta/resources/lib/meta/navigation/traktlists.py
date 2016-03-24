@@ -28,6 +28,7 @@ def trakt():
 @plugin.route('/trakt/movie_collection')
 def trakt_movie_collection():
     movies = trakt_get_collection("movies")
+    movies = sorted(movies, key=lambda k: k["movie"]["title"]) 
     items = []
     for item in movies:
         movie = item["movie"]
@@ -40,6 +41,7 @@ def trakt_movie_collection():
 @plugin.route('/trakt/tv_collection')
 def trakt_tv_collection():
     shows = trakt_get_collection("shows")
+    shows = sorted(shows, key=lambda k: k["show"]["title"]) 
     items = []
     for item in shows:
         show = item["show"]
