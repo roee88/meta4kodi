@@ -8,6 +8,7 @@ from meta.navigation.movies import movies_add_to_library
 from settings import *
 import requests
 import time
+from language import get_string as _
 
 CLIENT_ID = "865d182dbc8d400906a5d6efd074a55f3a26658a9eea56f23d82be2d70541567"
 CLIENT_SECRET = "a6a99ded7c20a15e8f7806f221c18ed48a6f07ff0f46755efad4a69968f4cd70"
@@ -133,7 +134,7 @@ def trakt_authenticate():
             plugin.set_setting(SETTING_TRAKT_ACCESS_TOKEN, token["access_token"])
             plugin.set_setting(SETTING_TRAKT_REFRESH_TOKEN, token["refresh_token"])
         else:
-            dialogs.ok("Authenticate Trakt", "Something went wrong/nPlease try again")
+            dialogs.ok(_("Authenticate Trakt"), _("Something went wrong/nPlease try again"))
 
 
 def trakt_get_collection(type):
@@ -149,7 +150,7 @@ def trakt_get_collection(type):
         headers=headers)
 
     if (response.status_code == 401):
-        dialogs.ok("authenticate trakt", "please authenticate with trakt")
+        dialogs.ok(_("authenticate trakt"), _("please authenticate with trakt"))
         trakt_authenticate()
         return trakt_get_collection(type)
     else:
@@ -169,7 +170,7 @@ def trakt_get_watchlist(type):
         headers=headers)
 
     if (response.status_code == 401):
-        dialogs.ok("authenticate trakt", "please authenticate with trakt")
+        dialogs.ok(_("authenticate trakt"), _("please authenticate with trakt"))
         trakt_authenticate()
         return trakt_get_watchlist(type)
     else:
@@ -189,7 +190,7 @@ def trakt_get_calendar():
         headers=headers)
 
     if (response.status_code == 401):
-        dialogs.ok("authenticate trakt", "please authenticate with trakt")
+        dialogs.ok(_("authenticate trakt"), _("please authenticate with trakt"))
         trakt_authenticate()
         return trakt_get_calendar(type)
     else:
@@ -236,7 +237,7 @@ def trakt_get_next_episodes():
 
 @plugin.route('/trakt/trakt_add_all_from_watchlist/<type>')
 def trakt_add_all_from_watchlist(type):
-    if dialogs.yesno("Add All From Collection", "Are You Sure?"):
+    if dialogs.yesno(_("Add All From Collection"), _("Are You Sure?")):
         items = trakt_get_watchlist(type)
 
         for item in items:
@@ -250,7 +251,7 @@ def trakt_add_all_from_watchlist(type):
 
 @plugin.route('/trakt/trakt_add_all_from_collection/<type>')
 def trakt_add_all_from_collection(type):
-    if dialogs.yesno("Add All From Collection", "Are You Sure?"):
+    if dialogs.yesno(_("Add All From Collection"), _("Are You Sure?")):
         items = trakt_get_collection(type)
 
         for item in items:
@@ -275,7 +276,7 @@ def trakt_get_hidden_items(type):
         headers=headers)
 
     if (response.status_code == 401):
-        dialogs.ok("authenticate trakt", "please authenticate with trakt")
+        dialogs.ok(_("authenticate trakt"), _("please authenticate with trakt"))
         trakt_authenticate()
         return trakt_get_hidden_items(type)
     else:
