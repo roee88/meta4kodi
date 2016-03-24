@@ -71,8 +71,18 @@ def trakt_movie_collection():
     items = []
     for item in movies:
         movie = item["movie"]
+        imdb_id = movie["ids"]["imdb"]
+        tmdb_id = movie["ids"]["tmdb"]
+        add_url = "plugin://plugin.video.meta/movies/add_to_library/{0}".format(tmdb_id)
+        context_menu = [
+            (
+                "Add to library",
+                "RunPlugin({0})".format(add_url)
+            ),
+        ]
         items.append({'label': movie["title"],
-                      'path': "plugin://plugin.video.meta/movies/play/imdb/" + str(movie["ids"]["imdb"]) + "/select"
+                      'path': "plugin://plugin.video.meta/movies/play/imdb/{0}/select".format(imdb_id),
+                      'context_menu': context_menu
         })
 
     return items
@@ -84,8 +94,17 @@ def trakt_tv_collection():
     items = []
     for item in shows:
         show = item["show"]
+        id = show["ids"]["tvdb"]
+        add_url = "plugin://plugin.video.meta/tv/add_to_library/{0}".format(id)
+        context_menu = [
+            (
+                "Add to library",
+                "RunPlugin({0})".format(add_url)
+            ),
+        ]
         items.append({'label': show["title"],
-                      'path': "plugin://plugin.video.meta/tv/tvdb/" + str(show["ids"]["tvdb"])
+                      'path': "plugin://plugin.video.meta/tv/tvdb/{0}".format(id),
+                      'context_menu': context_menu
         })
 
     return items
@@ -97,8 +116,18 @@ def trakt_movie_watchlist():
     items = []
     for item in movies:
         movie = item["movie"]
+        imdb_id = movie["ids"]["imdb"]
+        tmdb_id = movie["ids"]["tmdb"]
+        add_url = "plugin://plugin.video.meta/movies/add_to_library/{0}".format(tmdb_id)
+        context_menu = [
+            (
+                "Add to library",
+                "RunPlugin({0})".format(add_url)
+            ),
+        ]
         items.append({'label': movie["title"],
-                      'path': "plugin://plugin.video.meta/movies/play/imdb/" + str(movie["ids"]["imdb"]) + "/select"
+                      'path': "plugin://plugin.video.meta/movies/play/imdb/{0}/select".format(imdb_id),
+                      'context_menu': context_menu
         })
 
     return items
@@ -110,8 +139,17 @@ def trakt_tv_watchlist():
     items = []
     for item in shows:
         show = item["show"]
+        id = show["ids"]["tvdb"]
+        add_url = "plugin://plugin.video.meta/tv/add_to_library/{0}".format(id)
+        context_menu = [
+            (
+                "Add to library",
+                "RunPlugin({0})".format(add_url)
+            ),
+        ]
         items.append({'label': show["title"],
-                      'path': "plugin://plugin.video.meta/tv/tvdb/" + str(show["ids"]["tvdb"])
+                      'path': "plugin://plugin.video.meta/tv/tvdb/" + str(show["ids"]["tvdb"]),
+                      'context_menu': context_menu
         })
 
     return items

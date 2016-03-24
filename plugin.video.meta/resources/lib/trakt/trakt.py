@@ -125,7 +125,7 @@ def trakt_refresh_token():
 @plugin.route('/authenticate_trakt')
 def trakt_authenticate():
     code = trakt_get_device_code()
-    if dialogs.yesno("Athenticate Trakt","please go to https://trakt.tv/activate and enter the code " + code["user_code"]):
+    if dialogs.yesno("Athenticate Trakt","please go to https://trakt.tv/activate and enter the code {0}".format(code["user_code"])):
         token = trakt_get_device_token(code)
         if token is not False:
             plugin.set_setting(SETTING_TRAKT_ACCESS_TOKEN, token["access_token"])
@@ -143,7 +143,7 @@ def trakt_get_collection(type):
     }
     response = requests.request(
         "GET",
-        "https://api-v2launch.trakt.tv/sync/collection/"+ type,
+        "https://api-v2launch.trakt.tv/sync/collection/{0}".format(type),
         headers=headers)
 
     if (response.status_code == 401):
@@ -163,7 +163,7 @@ def trakt_get_watchlist(type):
     }
     response = requests.request(
         "GET",
-        "https://api-v2launch.trakt.tv/sync/watchlist/"+ type,
+        "https://api-v2launch.trakt.tv/sync/watchlist/{0}".format(type),
         headers=headers)
 
     if (response.status_code == 401):
