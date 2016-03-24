@@ -136,7 +136,7 @@ def trakt_authenticate():
         else:
             dialogs.ok(_("Authenticate Trakt"), _("Something went wrong/nPlease try again"))
 
-
+@plugin.cached(TTL=CACHE_TTL, cache="trakt")
 def trakt_get_collection(type):
     headers = {
         'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ def trakt_get_collection(type):
     else:
         return response.json()
 
-
+@plugin.cached(TTL=CACHE_TTL, cache="trakt")
 def trakt_get_watchlist(type):
     headers = {
         'Content-Type': 'application/json',
@@ -176,7 +176,7 @@ def trakt_get_watchlist(type):
     else:
         return response.json()
 
-
+@plugin.cached(TTL=CACHE_TTL, cache="trakt")
 def trakt_get_calendar():
     headers = {
         'Content-Type': 'application/json',
@@ -262,7 +262,7 @@ def trakt_add_all_from_collection(type):
                 id = item["movie"]["ids"]["imdb"]
                 movies_add_to_library(id)
 
-
+@plugin.cached(TTL=CACHE_TTL, cache="trakt")
 def trakt_get_hidden_items(type):
     headers = {
         'Content-Type': 'application/json',
