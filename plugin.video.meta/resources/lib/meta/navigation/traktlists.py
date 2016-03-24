@@ -1,8 +1,7 @@
 from meta import plugin
 from meta.gui import dialogs
 from meta.navigation.base import search, get_icon_path, get_genre_icon, get_genres, get_tv_genres, caller_name, caller_args, get_base_genres
-from meta.navigation.movies import movies_search_term
-from trakt.trakt import trakt_get_collection, trakt_get_watchlist, trakt_get_calendar,trakt_get_next_episodes
+from trakt.trakt import trakt_get_collection, trakt_get_watchlist, trakt_get_calendar,trakt_get_next_episodes, trakt_add_all_from_watchlist,trakt_add_all_from_collection
 import time
 
 @plugin.route('/trakt')
@@ -68,7 +67,11 @@ def trakt_watchlists():
 def trakt_movie_collection():
     movies = trakt_get_collection("movies")
     movies = sorted(movies, key=lambda k: k["movie"]["title"])
-    items = []
+    items = [
+        {
+            'label': "Add all to library",
+            'path' : plugin.url_for(trakt_add_all_from_collection, type="movies")
+    }]
     for item in movies:
         movie = item["movie"]
         imdb_id = movie["ids"]["imdb"]
@@ -91,7 +94,11 @@ def trakt_movie_collection():
 def trakt_tv_collection():
     shows = trakt_get_collection("shows")
     shows = sorted(shows, key=lambda k: k["show"]["title"])
-    items = []
+    items = [
+        {
+            'label': "Add all to library",
+            'path' : plugin.url_for(trakt_add_all_from_collection, type="shows")
+    }]
     for item in shows:
         show = item["show"]
         id = show["ids"]["tvdb"]
@@ -113,7 +120,11 @@ def trakt_tv_collection():
 def trakt_movie_watchlist():
     movies = trakt_get_watchlist("movies")
     movies = sorted(movies, key=lambda k: k["movie"]["title"])
-    items = []
+    items = [
+        {
+            'label': "Add all to library",
+            'path' : plugin.url_for(trakt_add_all_from_watchlist, type="movies")
+    }]
     for item in movies:
         movie = item["movie"]
         imdb_id = movie["ids"]["imdb"]
@@ -136,7 +147,11 @@ def trakt_movie_watchlist():
 def trakt_tv_watchlist():
     shows = trakt_get_watchlist("shows")
     shows = sorted(shows, key=lambda k: k["show"]["title"])
-    items = []
+    items = [
+        {
+            'label': "Add all to library",
+            'path' : plugin.url_for(trakt_add_all_from_watchlist, type="shows")
+    }]
     for item in shows:
         show = item["show"]
         id = show["ids"]["tvdb"]
@@ -148,7 +163,7 @@ def trakt_tv_watchlist():
             ),
         ]
         items.append({'label': show["title"],
-                      'path': "plugin://plugin.video.meta/tv/tvdb/" + str(show["ids"]["tvdb"]),
+                      'path': "plugin://plugin.video.meta/tv/tvdb/{0}".format(show["ids"]["tvdb"]),
                       'context_menu': context_menu
         })
 

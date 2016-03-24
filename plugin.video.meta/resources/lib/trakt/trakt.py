@@ -3,6 +3,8 @@ from meta.utils.text import to_utf8
 from meta.gui import dialogs
 from meta import plugin
 from meta.utils.properties import get_property, set_property, clear_property
+from meta.navigation.tvshows import tv_add_to_library
+from meta.navigation.movies import movies_add_to_library
 from settings import *
 import requests
 import time
@@ -220,3 +222,28 @@ def trakt_get_next_episodes():
             items.append(next_episode)
 
     return items
+
+@plugin.route('/trakt/trakt_add_all_from_watchlist/<type>')
+def trakt_add_all_from_watchlist(type):
+    items = trakt_get_watchlist(type)
+
+    for item in items:
+        if type == "shows":
+            id = item["show"]["ids"]["tvdb"]
+            tv_add_to_library(id)
+        else:
+            id = item["movie"]["ids"]["imdb"]
+            movies_add_to_library(id)
+
+
+@plugin.route('/trakt/trakt_add_all_from_collection/<type>')
+def trakt_add_all_from_collection(type):
+    items = trakt_get_collection(type)
+
+    for item in items:
+        if type == "shows":
+            id = item["show"]["ids"]["tvdb"]
+            tv_add_to_library(id)
+        else:
+            id = item["movie"]["ids"]["imdb"]
+            movies_add_to_library(id)
