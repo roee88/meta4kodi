@@ -152,3 +152,23 @@ def trakt_get_collection(type):
         return trakt_get_collection(type)
     else:
         return response.json()
+
+
+def trakt_get_watchlist(type):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + plugin.get_setting(SETTING_TRAKT_ACCESS_TOKEN),
+        'trakt-api-version': '2',
+        'trakt-api-key': CLIENT_ID
+    }
+    response = requests.request(
+        "GET",
+        "https://api-v2launch.trakt.tv/sync/watchlist/"+ type,
+        headers=headers)
+
+    if (response.status_code == 401):
+        dialogs.ok("authenticate trakt", "please authenticate with trakt")
+        trakt_authenticate()
+        return trakt_get_collection(type)
+    else:
+        return response.json()

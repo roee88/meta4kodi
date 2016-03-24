@@ -2,7 +2,7 @@ from meta import plugin
 from meta.gui import dialogs
 from meta.navigation.base import search, get_icon_path, get_genre_icon, get_genres, get_tv_genres, caller_name, caller_args, get_base_genres
 from meta.navigation.movies import movies_search_term
-from trakt.trakt import trakt_get_collection
+from trakt.trakt import trakt_get_collection, trakt_get_watchlist
 
 @plugin.route('/trakt')
 def trakt():
@@ -16,9 +16,17 @@ def trakt():
             'label': "TV Collection",
             'path': plugin.url_for(trakt_tv_collection),
         },
-        
+        {
+            'label': "Movie Watchlist",
+            'path': plugin.url_for(trakt_movie_watchlist),
+        },
+        {
+            'label': "TV Watchlist",
+            'path': plugin.url_for(trakt_tv_watchlist),
+        },
+
     ]
-    
+
     fanart = plugin.addon.getAddonInfo('fanart')
     for item in items:
         item['properties'] = {'fanart_image' : fanart}
@@ -28,7 +36,7 @@ def trakt():
 @plugin.route('/trakt/movie_collection')
 def trakt_movie_collection():
     movies = trakt_get_collection("movies")
-    movies = sorted(movies, key=lambda k: k["movie"]["title"]) 
+    movies = sorted(movies, key=lambda k: k["movie"]["title"])
     items = []
     for item in movies:
         movie = item["movie"]
@@ -41,14 +49,38 @@ def trakt_movie_collection():
 @plugin.route('/trakt/tv_collection')
 def trakt_tv_collection():
     shows = trakt_get_collection("shows")
-    shows = sorted(shows, key=lambda k: k["show"]["title"]) 
+    shows = sorted(shows, key=lambda k: k["show"]["title"])
     items = []
     for item in shows:
         show = item["show"]
         items.append({'label': show["title"],
-                      'path': "plugin://plugin.video.meta//tv/tvdb/" + str(show["ids"]["tvdb"])
+                      'path': "plugin://plugin.video.meta/tv/tvdb/" + str(show["ids"]["tvdb"])
         })
 
     return items
 
+@plugin.route('/trakt/movie_watchlist')
+def trakt_movie_watchlist():
+    movies = trakt_get_watchlist("movies")
+    movies = sorted(movies, key=lambda k: k["movie"]["title"])
+    items = []
+    for item in movies:
+        movie = item["movie"]
+        items.append({'label': movie["title"],
+                      'path': "plugin://plugin.video.meta/movies/play/tmdb/" + str(movie["ids"]["tmdb"]) + "/select"
+        })
 
+    return items
+
+@plugin.route('/trakt/tv_watchlist')
+def trakt_tv_watchlist():
+    shows = trakt_get_watchlist("shows")
+    shows = sorted(shows, key=lambda k: k["show"]["title"])
+    items = []
+    for item in shows:
+        show = item["show"]
+        items.append({'label': show["title"],
+                      'path': "plugin://plugin.video.meta/tv/tvdb/" + str(show["ids"]["tvdb"])
+        })
+
+    return items
