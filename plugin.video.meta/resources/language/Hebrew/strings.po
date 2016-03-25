@@ -104,16 +104,16 @@ msgid "Attempt to hide dialogs while Meta is searching"
 msgstr "הסתר חלונות משנה בזמן שהתוסף מבצע חיפוש"
 
 msgctxt "#32411"
-msgid "הסתר חלון התקדמות"
-msgstr ""
+msgid "Hide progress dialogs"
+msgstr "הסתר חלון התקדמות"
 
 msgctxt "#32412"
-msgid "הסתר התראות מידע"
-msgstr ""
+msgid "Hide information dialogs"
+msgstr "הסתר התראות מידע"
 
 msgctxt "#32413"
-msgid "הסתר מקלדת"
-msgstr ""
+msgid "Hide keyboard dialog"
+msgstr "הסתר מקלדת"
 
 msgctxt "#31000"
 msgid "Would you like to automatically set Meta as a movies video source?"

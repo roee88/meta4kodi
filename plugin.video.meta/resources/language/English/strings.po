@@ -226,3 +226,45 @@ msgstr ""
 msgctxt "#31028"
 msgid "Play with..."
 msgstr ""
+
+msgctxt "#32414"
+msgid "Trakt watchlist"
+msgstr ""
+
+msgctxt "#32415"
+msgid "Please go to https://trakt.tv/activate and enter the code"
+msgstr ""
+
+msgctxt "#32416"
+msgid "Next episodes"
+msgstr ""
+
+msgctxt "#32417"
+msgid "Authenticate Trakt"
+msgstr ""
+
+msgctxt "#32418"
+msgid "Add all to library"
+msgstr ""
+
+msgctxt "#32419"
+msgid ""
+"Are you sure you want to add your entire Trakt collection to Kodi library?"
+msgstr ""
+
+msgctxt "#32420"
+msgid "Trakt collection"
+msgstr ""
+
+msgctxt "#32421"
+msgid ""
+"Are you sure you want to add your entire Trakt watchlist to Kodi library?"
+msgstr ""
+
+msgctxt "#32422"
+msgid "You must authenticate with Trakt. Do you want to authenticate now?"
+msgstr ""
+
+msgctxt "#32423"
+msgid "My calendar"
+msgstr ""

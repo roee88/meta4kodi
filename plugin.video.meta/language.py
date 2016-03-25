@@ -23,7 +23,8 @@ if __name__ == "__main__":
         translated = [m.msgid.lower().replace("'", "\\'") for m in po]        
         missing = set([s for s in strings if s.lower() not in translated])
         if missing:
-            id = 31000
+            id = max([int(m.msgctxt[1:]) for m in po]) + 1        
+            #id = 31000
             print "warning: missing translation for", missing
             for text in missing:
                 entry = polib.POEntry(
@@ -102,3 +103,13 @@ _ALL['select player'] = 31025
 _ALL['warning'] = 31026
 _ALL['library setup'] = 31027
 _ALL['play with...'] = 31028
+_ALL['trakt watchlist'] = 32414
+_ALL['please go to https://trakt.tv/activate and enter the code'] = 32415
+_ALL['next episodes'] = 32416
+_ALL['authenticate trakt'] = 32417
+_ALL['add all to library'] = 32418
+_ALL['are you sure you want to add your entire trakt collection to kodi library?'] = 32419
+_ALL['trakt collection'] = 32420
+_ALL['are you sure you want to add your entire trakt watchlist to kodi library?'] = 32421
+_ALL['you must authenticate with trakt. do you want to authenticate now?'] = 32422
+_ALL['my calendar'] = 32423
