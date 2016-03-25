@@ -1,11 +1,11 @@
 import os
 import copy
-
+import time
 from xbmcswift2 import xbmc, xbmcvfs
 
 from meta import plugin, import_tmdb, import_tvdb, LANG
 from meta.gui import dialogs
-from meta.info import get_tvshow_metadata_tvdb, get_season_metadata_tvdb, get_episode_metadata_tvdb
+from meta.info import get_tvshow_metadata_tvdb, get_season_metadata_tvdb, get_episode_metadata_tvdb, get_tvshow_metadata_trakt
 from meta.utils.text import parse_year, is_ascii
 from meta.utils.executor import execute
 from meta.utils.properties import set_property
@@ -48,6 +48,38 @@ def tv():
             'path': plugin.url_for(tv_top_rated, page='1'),
             'icon': get_icon_path("top_rated"),
         },
+        {
+            'label': _("Trakt collection"),
+            'path': plugin.url_for(tv_trakt_collection),
+            'icon': get_icon_path("tv"), # TODO
+            'context_menu': [
+                (
+                    _("Add to library"),
+                    "RunPlugin({0})".format(plugin.url_for(tv_trakt_collection_to_library))
+                )
+            ],
+        },
+        {
+            'label': _("Trakt watchlist"),
+            'path': plugin.url_for(tv_trakt_watchlist),
+            'icon': get_icon_path("tv"), # TODO
+            'context_menu': [
+                (
+                    _("Add to library"),
+                    "RunPlugin({0})".format(plugin.url_for(tv_trakt_watchlist_to_library))
+                )
+            ],
+        },
+        {
+            'label': _("Next episodes"),
+            'path': plugin.url_for(tv_trakt_next_episodes),
+            'icon': get_icon_path("tv"), # TODO
+        },
+        {
+            'label': _("My calendar"),
+            'path': plugin.url_for(tv_trakt_calendar),
+            'icon': get_icon_path("tv"), # TODO
+        },
     ]
     
     fanart = plugin.addon.getAddonInfo('fanart')
@@ -75,7 +107,8 @@ def tv_search_term(term, page):
     items = []
     load_full_tvshow = lambda tvshow : tvdb.get_show(tvshow['id'], full=True)
     for tvdb_show in execute(load_full_tvshow, search_results, workers=10):
-        items.append(make_tvshow_item(tvdb_show))
+        info = build_tvshow_info(tvdb_show)
+        items.append(make_tvshow_item(info))
     
     return items
 
@@ -100,6 +133,42 @@ def tv_top_rated(page):
     result = tmdb.TV().top_rated(page=page, language=LANG)
     return list_tvshows(result)
 
+@plugin.route('/tv/trakt/collection')
+def tv_trakt_collection():
+    from trakt import trakt
+    result = trakt.trakt_get_collection("shows")
+    return list_trakt_tvshows(result)
+    
+@plugin.route('/tv/trakt/watchlist')
+def tv_trakt_watchlist():
+    from trakt import trakt
+    result = trakt.trakt_get_watchlist("shows")
+    return list_trakt_tvshows(result)
+
+@plugin.route('/tv/trakt/collection_to_library')
+def tv_trakt_collection_to_library():
+    from trakt import trakt
+    if dialogs.yesno(_("Add all to library"), _("Are you sure you want to add your entire Trakt collection to Kodi library?")):
+        tv_add_all_to_library(trakt.trakt_get_collection("shows"))
+
+@plugin.route('/tv/trakt/watchlist_to_library')
+def tv_trakt_watchlist_to_library():
+    from trakt import trakt
+    if dialogs.yesno(_("Add all to library"), _("Are you sure you want to add your entire Trakt watchlist to Kodi library?")):
+        tv_add_all_to_library(trakt.trakt_get_watchlist("shows"))
+    
+@plugin.route('/tv/trakt/next_episodes')
+def tv_trakt_next_episodes():
+    from trakt import trakt
+    result = trakt.trakt_get_next_episodes()
+    return list_trakt_episodes(result)
+    
+@plugin.route('/tv/trakt/calendar')
+def tv_trakt_calendar():
+    from trakt import trakt
+    result = trakt.trakt_get_calendar()
+    return list_trakt_episodes(result, with_time=True)
+    
 @plugin.cached_route('/tv/genre/<id>/<page>', TTL=CACHE_TTL)
 def tv_genre(id, page):
     """ Shows by genre """
@@ -147,27 +216,46 @@ def set_library_player(path):
     content = "{0}".format(player.id)
     player_file.write(content)
     player_file.close()
-            
+          
+def tv_add_all_to_library(items):
+    import_tvdb()    
+    
+    # setup library folder
+    library_folder = setup_library(plugin.get_setting(SETTING_TV_LIBRARY_FOLDER))
+
+    # add to library
+    for item in items:
+        ids = item["show"]["ids"]
+        tvdb_id = ids.get('tvdb')
+        if not tvdb_id:
+            continue
+        
+        show = tvdb[int(tvdb_id)]
+        if add_tvshow_to_library(library_folder, show, ADDON_DEFAULT.id):
+            set_property("clean_library", 1)
+        
+    # start scan 
+    scan_library()
+          
 @plugin.route('/tv/add_to_library/<id>')
-def tv_add_to_library(id,player=None):
+def tv_add_to_library(id):
     import_tvdb()    
     show = tvdb[int(id)]
     
-    if player is None:
-        # get active players
-        players = active_players("tvshows", filters = {'network': show.get('network')})
+    # get active players
+    players = active_players("tvshows", filters = {'network': show.get('network')})
+
+    # add default and selector options
+    players.insert(0, ADDON_SELECTOR)
+    players.insert(0, ADDON_DEFAULT)
+
+    # let the user select one player
+    selection = dialogs.select(_("Play with..."), [p.title for p in players])
+    if selection == -1:
+        return
     
-        # add default and selector options
-        players.insert(0, ADDON_SELECTOR)
-        players.insert(0, ADDON_DEFAULT)
-    
-        # let the user select one player
-        selection = dialogs.select(_("Play with..."), [p.title for p in players])
-        if selection == -1:
-            return
-        
-        # get selected player
-        player = players[selection]
+    # get selected player
+    player = players[selection]
     
     # setup library folder
     library_folder = setup_library(plugin.get_setting(SETTING_TV_LIBRARY_FOLDER))
@@ -192,7 +280,8 @@ def list_tvshows(response):
     results = response['results']
     for tvdb_show, tmdb_show in execute(tmdb_to_tvdb, results, workers=10):
         if tvdb_show is not None:
-            items.append(make_tvshow_item(tvdb_show, tmdb_show))
+            info = build_tvshow_info(tvdb_show, tmdb_show)
+            items.append(make_tvshow_item(info))
     
     if xbmc.abortRequested:
         return
@@ -210,8 +299,86 @@ def list_tvshows(response):
             })
     
     return items
+    
+def trakt_get_genres():
+    from trakt import trakt
+    genres_dict = dict([(x['slug'], x['name']) for x in trakt.trakt_get_genres("movies")])
+    genres_dict.update(dict([(x['slug'], x['name']) for x in trakt.trakt_get_genres("shows")]))
+    return genres_dict
+    
+def list_trakt_tvshows(results):
+    from trakt import trakt
+    
+    genres_dict = trakt_get_genres()
+    
+    shows = [get_tvshow_metadata_trakt(item["show"], genres_dict) for item in results]
+    items = [make_tvshow_item(show) for show in shows if show.get('tvdb_id')]
+    return items
 
-def make_tvshow_item(tvdb_show, tmdb_show=None):
+def list_trakt_episodes(result, with_time=False):    
+    genres_dict = trakt_get_genres()
+    
+    items = []
+    for item in result:
+        if 'episode' in item:
+            episode = item['episode']
+        else:
+            episode = item
+            
+        id = episode["ids"].get("tvdb")
+        if not id:
+            continue
+        
+        season_num = episode["season"]
+        episode_num = episode["number"]
+        
+        info = get_tvshow_metadata_trakt(item["show"], genres_dict)
+        info['season'] = episode["season"] 
+        info['episode'] = episode["number"]
+        info['title'] = episode["title"]
+        info['aired'] = episode.get('first_aired','')
+        info['premiered'] = episode.get('first_aired','')
+        info['rating'] = episode.get('rating', '')
+        info['plot'] = episode.get('overview','')
+        info['tagline'] = episode.get('tagline')
+        info['votes'] = episode.get('votes','')
+        #info['poster'] = episode['images']['poster']['thumb']
+
+        label = "{0} - S{1:02d}E{2:02d} - {3}".format(item["show"]["title"], season_num, episode_num, episode["title"])
+
+        if with_time and info['premiered']:
+            airtime = time.strptime(item["first_aired"], "%Y-%m-%dt%H:%M:%S.000Z")
+            airtime = time.strftime("%Y-%m-%d %H:%M", airtime)
+            label = "{0}\n{1}".format(label, airtime)
+            
+        context_menu = [
+             (
+              _("Select stream..."),
+              "PlayMedia({0})".format(plugin.url_for("tv_play", id=id, season=season_num, episode=episode_num, mode='select'))
+             ),
+             (
+              _("Show info"),
+              'Action(Info)'
+             )
+        ]
+        
+        items.append({'label': label,
+                      'path': plugin.url_for("tv_play", id=id, season=season_num, episode=episode_num, mode='default'),
+                      'context_menu': context_menu,
+                      'info': info,
+                      'is_playable': True,
+                      'info_type': 'video',
+                      'stream_info': {'video': {}},
+                      'thumbnail': info['poster'],
+                      'poster': info['poster'],
+                      'icon': "DefaultVideo.png",
+                      'properties' : {'fanart_image' : info['fanart']},
+                      })
+        
+    plugin.set_content('episodes')
+    return items
+    
+def build_tvshow_info(tvdb_show, tmdb_show=None):
     tvdb_info = get_tvshow_metadata_tvdb(tvdb_show)
     tmdb_info = get_tvshow_metadata_tmdb(tmdb_show)
     
@@ -224,7 +391,9 @@ def make_tvshow_item(tvdb_show, tmdb_show=None):
         for key in ('name', 'title', 'plot'):
             if is_ascii(info.get(key,'')) and not is_ascii(tvdb_info.get(key,'')):
                 info[key] = tvdb_info[key]
-                        
+    return info
+    
+def make_tvshow_item(info):                        
     tvdb_id = info['tvdb_id']
     
     context_menu = [
@@ -245,6 +414,7 @@ def make_tvshow_item(tvdb_show, tmdb_show=None):
             'poster': info['poster'],
             'properties' : {'fanart_image' : info['fanart']},
             'info_type': 'video',
+            'stream_info': {'video': {}},
             'info': info}
     
 @plugin.cached(TTL=CACHE_TTL)
@@ -311,6 +481,7 @@ def list_episodes_tvdb(id, season_num):
                       'info': episode_info,
                       'is_playable': True,
                       'info_type': 'video',
+                      'stream_info': {'video': {}},
                       'thumbnail': episode_info['poster'],
                       'poster': season_info['poster'],
                       'icon': "DefaultVideo.png",

@@ -1,9 +1,10 @@
 import copy
 
-from xbmcswift2 import xbmc
+from xbmcswift2 import xbmc, xbmcplugin
 
 from meta import plugin, import_tmdb, LANG
-from meta.info import get_movie_metadata
+from meta.info import get_movie_metadata, get_trakt_movie_metadata
+from meta.gui import dialogs
 from meta.utils.text import parse_year, date_to_timestamp
 from meta.play.movies import play_movie
 from meta.library.movies import setup_library, add_movie_to_library
@@ -12,6 +13,8 @@ from meta.navigation.base import search, get_icon_path, get_genre_icon, get_base
 from language import get_string as _
 from settings import CACHE_TTL, SETTING_MOVIES_LIBRARY_FOLDER
 
+
+MOVIE_SORT_METHODS = [xbmcplugin.SORT_METHOD_UNSORTED, xbmcplugin.SORT_METHOD_LABEL, xbmcplugin.SORT_METHOD_DATE, xbmcplugin.SORT_METHOD_VIDEO_YEAR]
 
 @plugin.route('/movies')
 def movies():
@@ -47,6 +50,28 @@ def movies():
             'path': plugin.url_for(movies_blockbusters, page='1'),
             'icon': get_icon_path("most_voted"),
         },
+        {
+            'label': _("Trakt collection"),
+            'path': plugin.url_for(movies_trakt_collection),
+            'icon': get_icon_path("movies"), # TODO
+            'context_menu': [
+                (
+                    _("Add to library"),
+                    "RunPlugin({0})".format(plugin.url_for(movies_trakt_collection_to_library))
+                )
+            ],
+        },
+        {
+            'label': _("Trakt watchlist"),
+            'path': plugin.url_for(movies_trakt_watchlist),
+            'icon': get_icon_path("movies"), # TODO
+            'context_menu': [
+                (
+                    _("Add to library"),
+                    "RunPlugin({0})".format(plugin.url_for(movies_trakt_watchlist_to_library))
+                )
+            ],
+        },
     ]
 
     fanart = plugin.addon.getAddonInfo('fanart')
@@ -65,39 +90,39 @@ def movies_search_term(term, page):
     """ Perform search of a specified <term>"""
     import_tmdb()
     result = tmdb.Search().movie(query=term, language = LANG, page = page)
-    return list_movies(result)
+    return plugin.finish(list_tmdb_movies(result), sort_methods=MOVIE_SORT_METHODS)
 
-@plugin.cached_route('/movies/most_popular/<page>', TTL=CACHE_TTL)
+@plugin.route('/movies/most_popular/<page>')
 def movies_most_popular(page):
     """ Most popular movies """
     import_tmdb()    
     result = tmdb.Movies().popular(language=LANG, page=page)
-    return list_movies(result)
+    return plugin.finish(list_tmdb_movies(result), sort_methods=MOVIE_SORT_METHODS)
 
-@plugin.cached_route('/movies/now_playing/<page>', TTL=CACHE_TTL)
+@plugin.route('/movies/now_playing/<page>')
 def movies_now_playing(page):
     import_tmdb()
     result = tmdb.Movies().now_playing(language=LANG, page=page)    
-    return list_movies(result)
+    return plugin.finish(list_tmdb_movies(result), sort_methods=MOVIE_SORT_METHODS)
 
-@plugin.cached_route('/movies/top_rated/<page>', TTL=CACHE_TTL)
+@plugin.route('/movies/top_rated/<page>')
 def movies_top_rated(page):
     import_tmdb()    
     result = tmdb.Movies().top_rated(language=LANG, page=page)
-    return list_movies(result)
+    return plugin.finish(list_tmdb_movies(result), sort_methods=MOVIE_SORT_METHODS)
 
-@plugin.cached_route('/movies/blockbusters/<page>', TTL=CACHE_TTL)
+@plugin.route('/movies/blockbusters/<page>')
 def movies_blockbusters(page):
     import_tmdb()
     result = tmdb.Discover().movie(language=LANG, **{'page': page, 'sort_by': 'revenue.desc'})   
-    return list_movies(result)
+    return plugin.finish(list_tmdb_movies(result), sort_methods=MOVIE_SORT_METHODS)
 
-@plugin.cached_route('/movies/genre/<id>/<page>', TTL=CACHE_TTL)
+@plugin.route('/movies/genre/<id>/<page>')
 def movies_genre(id, page):
     """ Movies by genre id """
     import_tmdb()
     result = tmdb.Genres(id).movies(id=id, language=LANG, page=page)
-    return list_movies(result)
+    return plugin.finish(list_tmdb_movies(result), sort_methods=MOVIE_SORT_METHODS)
     
 @plugin.route('/movies/genres')
 def movies_genres():
@@ -108,22 +133,61 @@ def movies_genres():
               'path': plugin.url_for(movies_genre, id=id, page='1') } 
             for id, name in genres.items()], key=lambda k: k['label'])
 
-@plugin.route('/movies/add_to_library/<id>')
-def movies_add_to_library(id):
+@plugin.route('/movies/trakt/collection')
+def movies_trakt_collection():
+    from trakt import trakt
+    result = trakt.trakt_get_collection("movies")
+    return plugin.finish(list_trakt_movies(result), sort_methods=MOVIE_SORT_METHODS)
+
+@plugin.route('/movies/trakt/watchlist')
+def movies_trakt_watchlist():
+    from trakt import trakt
+    result = trakt.trakt_get_watchlist("movies")
+    return plugin.finish(list_trakt_movies(result), sort_methods=MOVIE_SORT_METHODS)
+    
+@plugin.route('/movies/trakt/collection_to_library')
+def movies_trakt_collection_to_library():
+    from trakt import trakt
+    if dialogs.yesno(_("Add all to library"), _("Are you sure you want to add your entire Trakt collection to Kodi library?")):
+        movies_add_all_to_library(trakt.trakt_get_collection("movies"))
+
+@plugin.route('/movies/trakt/watchlist_to_library')
+def movies_trakt_watchlist_to_library():
+    from trakt import trakt
+    if dialogs.yesno(_("Add all to library"), _("Are you sure you want to add your entire Trakt watchlist to Kodi library?")):
+        movies_add_all_to_library(trakt.trakt_get_watchlist("movies"))
+        
+def movies_add_all_to_library(items):
+    library_folder = setup_library(plugin.get_setting(SETTING_MOVIES_LIBRARY_FOLDER))
+    
+    for item in items:
+        ids = item["movie"]["ids"]
+        if ids.get('imdb'):
+            add_movie_to_library(library_folder, "imdb", ids["imdb"], None)
+        elif ids.get('tmdb'):
+            add_movie_to_library(library_folder, "tmdb", ids["tmdb"], None)
+        else:
+            plugin.log.error("movie %s is missing both imdb and tmdb ids" % ids['slug'])
+            
+    scan_library()
+                
+@plugin.route('/movies/add_to_library/<src>/<id>')
+def movies_add_to_library(src, id):
     """ Add movie to library """
     library_folder = setup_library(plugin.get_setting(SETTING_MOVIES_LIBRARY_FOLDER))
 
-    # TODO: we actually prefer tmdb...
+    date = None
+    if src == "tmdb":
+        import_tmdb()
+
+        movie = tmdb.Movies(tmdb_id).info()
+        date = date_to_timestamp(movie.get('release_date'))
+        imdb_id = movie.get('imdb_id')
+        if imdb_id:
+            src = "imdb"
+            id = imdb_id
     
-    import_tmdb()
-    movie = tmdb.Movies(id).info()
-    imdb_id = movie.get('imdb_id')
-    date = date_to_timestamp(movie.get('release_date'))
-    if imdb_id:
-        add_movie_to_library(library_folder, "imdb", imdb_id, date)
-    else:
-        add_movie_to_library(library_folder, "tmdb", id, date)
-    
+    add_movie_to_library(library_folder, src, id, date)   
     scan_library()
 
 @plugin.route('/movies/play/<src>/<id>/<mode>')
@@ -145,12 +209,11 @@ def movies_play(src, id, mode="external"):
     else:
         plugin.set_resolved_url()
 
-def list_movies(result):
+def list_tmdb_movies(result):
     genres_dict = get_base_genres()
-        
-    items = [make_movie_item(get_movie_metadata(item, genres_dict)) \
-                for item in result['results']]
-        
+    movies = [get_movie_metadata(item, genres_dict) for item in result['results']]
+    items = [make_movie_item(movie) for movie in movies]
+    
     if 'page' in result:
         page = result['page']
         args = caller_args()
@@ -164,19 +227,34 @@ def list_movies(result):
 
     return items
     
+def list_trakt_movies(results):
+    from trakt import trakt
+    
+    genres_dict = dict([(x['slug'], x['name']) for x in trakt.trakt_get_genres("movies")])
+    movies = [get_trakt_movie_metadata(item["movie"], genres_dict) for item in results]
+    items = [make_movie_item(movie) for movie in movies]
+    return items
     
 def make_movie_item(movie_info):
 
-    tmdb_id = movie_info['tmdb']
+    tmdb_id = movie_info.get('tmdb')
+    imdb_id = movie_info.get('imdb')
+    
+    if tmdb_id:
+        id = tmdb_id 
+        src = 'tmdb'
+    else:
+        id = imdb_id 
+        src = 'imdb'
     
     context_menu = [
      (
        _("Select stream..."),
-       "PlayMedia({0})".format(plugin.url_for("movies_play", src='tmdb', id=tmdb_id, mode='select'))
+       "PlayMedia({0})".format(plugin.url_for(movies_play, src=src, id=id, mode='select'))
      ),                
      (
       _("Add to library"), 
-      "RunPlugin({0})".format(plugin.url_for("movies_add_to_library", id=tmdb_id))
+      "RunPlugin({0})".format(plugin.url_for(movies_add_to_library, src=src, id=id))
      ),
      (
       _("Show info"),
@@ -184,13 +262,16 @@ def make_movie_item(movie_info):
      ),
     ]
     
-    return {'label': movie_info['title'],
-            'path': plugin.url_for("movies_play", src='tmdb', id=tmdb_id, mode='default'),
-            'context_menu': context_menu,
-            'thumbnail': movie_info['poster'],
-            'icon': "DefaultVideo.png",
-            'poster': movie_info['poster'],
-            'properties' : {'fanart_image' : movie_info['fanart']},
-            'is_playable': True,
-            'info_type': 'video',
-            'info': movie_info}
+    return {
+        'label': movie_info['title'],
+        'path': plugin.url_for(movies_play, src=src, id=id, mode='default'),
+#        'context_menu': context_menu,
+        'thumbnail': movie_info['poster'],
+        'icon': "DefaultVideo.png",
+        'poster': movie_info['poster'],
+        'properties' : {'fanart_image' : movie_info['fanart']},
+        'is_playable': True,
+        'info_type': 'video',
+        'stream_info': {'video': {}},
+        'info': movie_info
+    }
