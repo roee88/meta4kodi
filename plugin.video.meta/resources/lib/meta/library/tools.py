@@ -165,7 +165,7 @@ def _db_execute(db_name, command):
     return True
 
 def _get_database(db_name):
-    path_db = "special://home/userdata/Database/" + db_name
+    path_db = "special://profile/Database/" + db_name
     filelist = glob.glob(xbmc.translatePath(path_db))
     if filelist:
         return filelist[-1]
