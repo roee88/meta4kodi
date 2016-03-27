@@ -25,7 +25,7 @@ msgstr "Spelers URL"
 
 msgctxt "#32012"
 msgid "Install from URL"
-msgstr "Installeer van URl"
+msgstr "Installeer van URL"
 
 msgctxt "#32100"
 msgid "Movies"
@@ -93,7 +93,7 @@ msgstr "Zet tijd van toevoegen bij uitgave datum"
 
 msgctxt "#32402"
 msgid "Use simple selection dialog"
-msgstr "Gebruik simpele selectie dialoog"
+msgstr "Gebruik simpel selectie dialoog"
 
 msgctxt "#32404"
 msgid "Number of simultaneous searches"
@@ -117,7 +117,7 @@ msgstr "Verberg keyboard dialogen"
 
 msgctxt "#31000"
 msgid "Would you like to automatically set Meta as a movies video source?"
-msgstr "Wilt u Meta automatisch als film bron instellen"
+msgstr "Wilt u Meta automatisch als film bron instellen?"
 
 msgctxt "#31001"
 msgid "Genres"
@@ -149,7 +149,7 @@ msgstr "Vul wachtwoord in"
 
 msgctxt "#31008"
 msgid "Players updated"
-msgstr "Spelers geüpdate"
+msgstr "Spelers bijgewerkt"
 
 msgctxt "#31009"
 msgid "Enable players"
@@ -173,11 +173,11 @@ msgstr "Nu op TV"
 
 msgctxt "#31015"
 msgid "Update players"
-msgstr "Spelers updaten"
+msgstr "Spelers bijwerken"
 
 msgctxt "#31016"
 msgid "Would you like to automatically set Meta as a tv shows source?"
-msgstr "Wilt u Meta automatisch als TV bron instellen"
+msgstr "Wilt u Meta automatisch als TV bron instellen?"
 
 msgctxt "#31017"
 msgid "Search"
@@ -205,7 +205,7 @@ msgstr "Selecteer standaard speler"
 
 msgctxt "#31023"
 msgid "Failed to update players"
-msgstr "Updaten spelers mislukt"
+msgstr "Bijwerken spelers mislukt"
 
 msgctxt "#31024"
 msgid "In theatres"
