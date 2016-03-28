@@ -55,12 +55,12 @@
             
             
             <!-- library folder -->
-            <setting id="movies_library_folder" label="32301" type="folder" default="special://userdata/addon_data/plugin.video.meta/Movies/" />
+            <setting id="movies_library_folder" label="32301" type="folder" default="special://profile/addon_data/plugin.video.meta/Movies/" />
 
         <!-- TV Shows -->
         <setting label="32200" type="lsep"/>        
             <!-- library folder -->
-            <setting id="tv_library_folder" label="32302" type="folder" default="special://userdata/addon_data/plugin.video.meta/TVShows/" />
+            <setting id="tv_library_folder" label="32302" type="folder" default="special://profile/addon_data/plugin.video.meta/TVShows/" />
             
     </category>
     

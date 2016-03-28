@@ -14,7 +14,7 @@ from meta.play.players import EXTENSION
 
 from language import get_string as _
 
-data_dir = "special://userdata/addon_data/{0}".format(plugin.id)
+data_dir = "special://profile/addon_data/{0}".format(plugin.id)
 data_dir = xbmc.translatePath(data_dir)
  
 def remove_auth(url):
