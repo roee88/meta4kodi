@@ -82,6 +82,7 @@ def update_library():
 @plugin.route('/settings/players/<media>')
 def settings_set_players(media):
     players = get_players(media)
+    players = sorted(players,key=lambda player: player.clean_title.lower())
 
     # Get selection by user
     selected = None
