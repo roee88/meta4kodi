@@ -265,7 +265,7 @@ def make_movie_item(movie_info):
     return {
         'label': movie_info['title'],
         'path': plugin.url_for(movies_play, src=src, id=id, mode='default'),
-#        'context_menu': context_menu,
+        'context_menu': context_menu,
         'thumbnail': movie_info['poster'],
         'icon': "DefaultVideo.png",
         'poster': movie_info['poster'],
