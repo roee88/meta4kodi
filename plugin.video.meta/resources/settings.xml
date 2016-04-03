@@ -37,6 +37,17 @@
             <!-- Default players from library -->
             <setting label="32211" option="close" type="action" action="RunPlugin(plugin://plugin.video.meta/settings/default_player_fromlib/tvshows)"/>
             <setting subsetting="true" visible="!eq(0,)" enable="false" type="text" id="tv_default_player_from_library" default="selector" />
+
+        <!-- Live TV -->
+        <setting label="32500" type="lsep"/>
+
+            <!-- Players -->
+            <setting label="32501" option="close" type="action" action="RunPlugin(plugin://plugin.video.meta/settings/players/live)"/>
+            <setting subsetting="true" visible="false" enable="false" type="text" id="live_enabled_players" />
+
+            <!-- Default players -->
+            <setting label="32510" option="close" type="action" action="RunPlugin(plugin://plugin.video.meta/settings/default_player/live)"/>
+            <setting subsetting="true" visible="!eq(0,)" enable="false" type="text" id="live_default_player" default="selector" />
         
     </category>
     

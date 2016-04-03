@@ -230,6 +230,8 @@ def list_tmdb_movies(result):
 def list_trakt_movies(results):
     from trakt import trakt
     
+    results = sorted(results,key=lambda item: item["movie"]["title"].lower().replace("the ", ""))
+    
     genres_dict = dict([(x['slug'], x['name']) for x in trakt.trakt_get_genres("movies")])
     movies = [get_trakt_movie_metadata(item["movie"], genres_dict) for item in results]
     items = [make_movie_item(movie) for movie in movies]

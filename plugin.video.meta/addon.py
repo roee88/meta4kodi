@@ -19,6 +19,7 @@ from meta.play.players import get_players, ADDON_SELECTOR
 
 import meta.navigation.movies
 import meta.navigation.tvshows
+import meta.navigation.live
 from meta.navigation.base import get_icon_path
 from meta.play.base import active_players
 
@@ -42,6 +43,11 @@ def root():
             'path': plugin.url_for("tv"),
             'icon': get_icon_path("tv"),
         },
+        {
+            'label': _("Live"),
+            'path': plugin.url_for("live"),
+            'icon': get_icon_path("tv"),
+        }
     ]
     
     fanart = plugin.addon.getAddonInfo('fanart')
@@ -100,6 +106,8 @@ def settings_set_players(media):
             plugin.set_setting(SETTING_MOVIES_ENABLED_PLAYERS, selected)
         elif media == "tvshows":
             plugin.set_setting(SETTING_TV_ENABLED_PLAYERS, selected)
+        elif media == "live":
+            plugin.set_setting(SETTING_LIVE_ENABLED_PLAYERS, selected)
         else:
             raise Exception("invalid parameter %s" % media)
     

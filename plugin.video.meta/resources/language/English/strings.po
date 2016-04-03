@@ -268,3 +268,15 @@ msgstr ""
 msgctxt "#32423"
 msgid "My calendar"
 msgstr ""
+
+msgctxt "#32500"
+msgid "Live"
+msgstr ""
+
+msgctxt "#32501"
+msgid "Enable Live Players"
+msgstr ""
+
+msgctxt "#32510"
+msgid "Prefered Live Player"
+msgstr ""

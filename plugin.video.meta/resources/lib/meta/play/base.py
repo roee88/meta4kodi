@@ -23,6 +23,8 @@ def active_players(media, filters={}):
         setting = SETTING_MOVIES_ENABLED_PLAYERS
     elif media == "tvshows":
         setting = SETTING_TV_ENABLED_PLAYERS
+    elif media == "live":
+        setting = SETTING_LIVE_ENABLED_PLAYERS
     else:
         raise Exception("invalid parameter %s" % media)
         

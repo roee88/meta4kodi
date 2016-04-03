@@ -309,6 +309,8 @@ def trakt_get_genres():
 def list_trakt_tvshows(results):
     from trakt import trakt
     
+    results = sorted(results,key=lambda item: item["show"]["title"].lower().replace("the ", ""))
+    
     genres_dict = trakt_get_genres()
     
     shows = [get_tvshow_metadata_trakt(item["show"], genres_dict) for item in results]
