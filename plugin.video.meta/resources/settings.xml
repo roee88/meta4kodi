@@ -102,9 +102,10 @@
     </category>
     
     <category label="Trakt">
-        <setting label = "authenticate trakt" type="action" action="RunPlugin(plugin://plugin.video.meta/authenticate_trakt)" />
+        <setting label = "32417" type="action" action="RunPlugin(plugin://plugin.video.meta/authenticate_trakt)" />
         <setting label = "trakt access token" id="trakt_access_token" type = "text" visible="false" />
         <setting label = "trakt refresh token" id="trakt_refresh_token" type = "text" visible="false" />
+        <setting label = "trakt refresh token" id="trakt_expires_at" type = "text" visible="false" />
     </category>
 
 </settings>
