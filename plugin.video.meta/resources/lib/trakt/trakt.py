@@ -133,7 +133,6 @@ def trakt_refresh_token():
         plugin.set_setting(SETTING_TRAKT_REFRESH_TOKEN, response["refresh_token"])
 
 
-@plugin.route('/authenticate_trakt')
 def trakt_authenticate():
     code = trakt_get_device_code()
     token = trakt_get_device_token(code)

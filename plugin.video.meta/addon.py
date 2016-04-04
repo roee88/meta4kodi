@@ -85,6 +85,11 @@ def update_library():
     finally:
         clear_property("updating_library")
 
+@plugin.route('/authenticate_trakt')
+def trakt_authenticate():
+    from trakt import trakt
+    trakt.trakt_authenticate()
+    
 @plugin.route('/settings/players/<media>')
 def settings_set_players(media):
     players = get_players(media)
