@@ -1,3 +1,6 @@
+v1.1.3
+- Fixed trakt authentication from settings
+
 v1.1.2
 - Fixed settings labels
 
