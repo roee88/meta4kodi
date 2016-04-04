@@ -8,7 +8,7 @@ from meta.utils.text import to_unicode
 from meta.library.tvshows import get_player_plugin_from_library
 from meta.info import get_tvshow_metadata_tvdb, get_season_metadata_tvdb, get_episode_metadata_tvdb
 from meta.play.players import get_needed_langs, ADDON_SELECTOR
-from meta.play.base import get_trakt_ids, active_players, action_cancel, action_activate, action_play, action_resolve, get_video_link
+from meta.play.base import get_trakt_ids, active_players, action_cancel, action_play, on_play_video
 
 from settings import SETTING_USE_SIMPLE_SELECTOR, SETTING_TV_DEFAULT_PLAYER, SETTING_TV_DEFAULT_PLAYER_FROM_LIBRARY
 from language import get_string as _
@@ -31,14 +31,7 @@ def play_episode(id, season, episode, mode):
     show = tvdb[id]
     show_info = get_tvshow_metadata_tvdb(show, banners=False)
 
-    # Get active players
-    players = active_players("tvshows", filters = {'network': show.get('network')})
-    if not players:
-        xbmc.executebuiltin( "Action(Info)")
-        action_cancel()
-        return
-
-    # Get player to use
+    # Get players to use
     if mode == 'select':
         play_plugin = ADDON_SELECTOR.id
     elif mode == 'library':
@@ -47,15 +40,18 @@ def play_episode(id, season, episode, mode):
             play_plugin = plugin.get_setting(SETTING_TV_DEFAULT_PLAYER_FROM_LIBRARY)
     else:
         play_plugin = plugin.get_setting(SETTING_TV_DEFAULT_PLAYER)
-        
-    # Use just selected player if exists (selectors excluded)
+    players = active_players("tvshows", filters = {'network': show.get('network')})
     players = [p for p in players if p.id == play_plugin] or players
-
+    if not players:
+        xbmc.executebuiltin( "Action(Info)")
+        action_cancel()
+        return
+    
     # Get show ids from Trakt
     trakt_ids = get_trakt_ids("tvdb", id, show['seriesname'],
                     "show", show.get('year', 0))
 
-    # Preload params
+    # Get parameters
     params = {}
     for lang in get_needed_langs(players):
         if lang == LANG:
@@ -69,35 +65,17 @@ def play_episode(id, season, episode, mode):
         params[lang]['info'] = show_info
         params[lang] = to_unicode(params[lang])
 
-    # BETA
-    use_simple_selector = plugin.get_setting(SETTING_USE_SIMPLE_SELECTOR, converter=bool)
-    is_extended = not (use_simple_selector or len(players) == 1)    
-    if is_extended:
-        action_cancel()
-
-    # Get single video selection
-    selection = get_video_link(players, params, mode, use_simple_selector)
+    # Go for it
+    link = on_play_video(mode, players, params, trakt_ids)
+    if link:
+        # set properties
+        set_property("data", json.dumps({'dbid': dbid, 'tvdb': id, 
+            'season': season, 'episode': episode}))
     
-    if not is_extended:
-        action_cancel()
-        
-    if not selection:
-        return
-        
-    # Get selection details
-    link = selection['path']
-    action = selection.get('action', '')
-    
-    plugin.log.info('Playing url: %s' % link.encode('utf-8'))
-
-    # Activate link
-    if action == "ACTIVATE":
-        action_activate(link)
-    else:
-        # Build list item (needed just for playback from widgets)
+        # Play
         season_info = get_season_metadata_tvdb(show_info, show[season], banners=False)
         episode_info = get_episode_metadata_tvdb(season_info, show[season][episode])
-        listitem = {
+        action_play({
             'label': episode_info['title'],
             'path': link,
             'info': episode_info,
@@ -106,19 +84,7 @@ def play_episode(id, season, episode, mode):
             'thumbnail': episode_info['poster'],
             'poster': episode_info['poster'],
             'properties' : {'fanart_image' : episode_info['fanart']},
-        }
-    
-        # set properties
-        if trakt_ids:
-            set_property('script.trakt.ids', json.dumps(trakt_ids))
-        set_property("data", json.dumps({'dbid': dbid, 'tvdb': id, 
-            'season': season, 'episode': episode}))
-        
-        # Play
-        if action == "PLAY":
-            action_play(listitem)
-        else:
-            action_resolve(listitem)
+        })
         
 def get_episode_parameters(show, season, episode):
     import_tmdb()

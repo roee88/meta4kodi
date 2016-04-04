@@ -1,9 +1,11 @@
+import json
 from traceback import print_exc
 from xbmcswift2 import xbmc, xbmcgui
 
 from meta import plugin
 from meta.gui import dialogs
 from meta.utils.executor import execute
+from meta.utils.properties import set_property
 from meta.utils.text import to_unicode, urlencode_path, apply_parameters
 from meta.library.tools import get_movie_from_library, get_episode_from_library
 from meta.play.players import get_players
@@ -101,6 +103,42 @@ def get_video_link(players, params, mode, use_simple=False):
         lister.stop()
 
     return selection
+
+def on_play_video(mode, players, params, trakt_ids=None):
+    assert players
+        
+    # Cancel resolve
+    action_cancel()
+        
+    # Get video link
+    use_simple_selector = plugin.get_setting(SETTING_USE_SIMPLE_SELECTOR, converter=bool)
+    is_extended = not (use_simple_selector or len(players) == 1)    
+    if not is_extended:
+        xbmc.executebuiltin("ActivateWindow(busydialog)")
+    try:
+        selection = get_video_link(players, params, mode, use_simple_selector)
+    finally:
+        if not is_extended:
+            xbmc.executebuiltin("Dialog.Close(busydialog)")
+            
+    if not selection:
+        return
+        
+    # Get selection details
+    link = selection['path']
+    action = selection.get('action', '')
+    
+    plugin.log.info('Playing url: %s' % link.encode('utf-8'))
+
+    # Activate link
+    if action == "ACTIVATE":
+        action_activate(link)
+    else:        
+        if trakt_ids:
+            set_property('script.trakt.ids', json.dumps(trakt_ids))
+        return link
+        
+    return None
     
 def resolve_player(player, lister, params):
     results = []

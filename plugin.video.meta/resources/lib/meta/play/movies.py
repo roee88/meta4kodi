@@ -7,7 +7,7 @@ from meta.utils.text import to_unicode, parse_year
 from meta.utils.properties import set_property
 from meta.info import get_movie_metadata
 from meta.play.players import get_needed_langs, ADDON_SELECTOR
-from meta.play.base import get_trakt_ids, active_players, action_cancel, action_activate, action_play, action_resolve, get_video_link
+from meta.play.base import get_trakt_ids, active_players, action_cancel, action_play, on_play_video
 
 from settings import SETTING_USE_SIMPLE_SELECTOR, SETTING_MOVIES_DEFAULT_PLAYER, SETTING_MOVIES_DEFAULT_PLAYER_FROM_LIBRARY
 from language import get_string as _
@@ -15,24 +15,20 @@ from language import get_string as _
 def play_movie(tmdb_id, mode):  
     import_tmdb()
         
-    # Get active players
-    players = active_players("movies")
-    if not players:
-        xbmc.executebuiltin( "Action(Info)")
-        action_cancel()
-        return
-
-    # Get player to use
+    # Get players to use
     if mode == 'select':
         play_plugin = ADDON_SELECTOR.id
     elif mode == 'library':
         play_plugin = plugin.get_setting(SETTING_MOVIES_DEFAULT_PLAYER_FROM_LIBRARY)
     else:
         play_plugin = plugin.get_setting(SETTING_MOVIES_DEFAULT_PLAYER)
-    
-    # Use just selected player if exists (selectors excluded)
+    players = active_players("movies")
     players = [p for p in players if p.id == play_plugin] or players
-
+    if not players:
+        xbmc.executebuiltin( "Action(Info)")
+        action_cancel()
+        return
+    
     # Get movie data from TMDB
     movie = tmdb.Movies(tmdb_id).info(language=LANG)
     movie_info = get_movie_metadata(movie)
@@ -41,7 +37,7 @@ def play_movie(tmdb_id, mode):
     trakt_ids = get_trakt_ids("tmdb", tmdb_id, movie['original_title'],
                     "movie", parse_year(movie['release_date']))
     
-    # Preload params
+    # Get parameters
     params = {}
     for lang in get_needed_langs(players):
         if lang == LANG:
@@ -52,34 +48,12 @@ def play_movie(tmdb_id, mode):
         params[lang].update(trakt_ids)
         params[lang]['info'] = movie_info
         params[lang] = to_unicode(params[lang])
-        
-    # BETA
-    use_simple_selector = plugin.get_setting(SETTING_USE_SIMPLE_SELECTOR, converter=bool)
-    is_extended = not (use_simple_selector or len(players) == 1)
-    if is_extended:
-        action_cancel()
-        
-    # Get single video selection        
-    selection = get_video_link(players, params, mode, use_simple_selector)
 
-    if not is_extended:
-        action_cancel()
-
-    if not selection:
-        return
-        
-    # Get selection details
-    link = selection['path']
-    action = selection.get('action', '')
-    
-    plugin.log.info('Playing url: %s' % link.encode('utf-8'))
-
-    # Activate link
-    if action == "ACTIVATE":
-        action_activate(link)
-    else:
+    # Go for it
+    link = on_play_video(mode, players, params, trakt_ids)
+    if link:
         movie = tmdb.Movies(tmdb_id).info(language=LANG)
-        listitem = {
+        action_play({
             'label': movie_info['title'],
             'path': link,
             'info': movie_info,
@@ -88,16 +62,8 @@ def play_movie(tmdb_id, mode):
             'thumbnail': movie_info['poster'],
             'poster': movie_info['poster'],
             'properties' : {'fanart_image' : movie_info['fanart']},
-        }
+        })
         
-        if trakt_ids:
-            set_property('script.trakt.ids', json.dumps(trakt_ids))
-
-        if action == "PLAY":
-            action_play(listitem)
-        else:
-            action_resolve(listitem)
-
 def get_movie_parameters(movie):
     parameters = {}
 
