@@ -180,7 +180,7 @@ def movies_add_to_library(src, id):
     if src == "tmdb":
         import_tmdb()
 
-        movie = tmdb.Movies(tmdb_id).info()
+        movie = tmdb.Movies(id).info()
         date = date_to_timestamp(movie.get('release_date'))
         imdb_id = movie.get('imdb_id')
         if imdb_id:
