@@ -15,214 +15,214 @@ msgstr ""
 "Last-Translator: \n"
 "X-Generator: Poedit 1.8.7\n"
 
-msgctxt "#32000"
+msgctxt "#30000"
 msgid "General"
 msgstr "כללי"
 
-msgctxt "#32010"
+msgctxt "#30010"
 msgid "Players URL"
 msgstr "כתובת לעדכון נגנים"
 
-msgctxt "#32012"
+msgctxt "#30012"
 msgid "Install from URL"
 msgstr "התקן נגנים מכתובת"
 
-msgctxt "#32100"
+msgctxt "#30100"
 msgid "Movies"
 msgstr "סרטים"
 
-msgctxt "#32110"
+msgctxt "#30110"
 msgid "Enable movie players"
 msgstr "אפשר נגני סרטים"
 
-msgctxt "#32120"
+msgctxt "#30120"
 msgid "Preferred movie player"
 msgstr "נגן סרטים מועדף"
 
-msgctxt "#32121"
+msgctxt "#30121"
 msgid "Preferred movie player from library"
 msgstr "נגן סרטים מועדף בניגון מספריה"
 
-msgctxt "#32200"
+msgctxt "#30200"
 msgid "TV Shows"
 msgstr "סדרות"
 
-msgctxt "#32201"
+msgctxt "#30201"
 msgid "Enable TV players"
 msgstr "אפשר נגני סדרות"
 
-msgctxt "#32210"
+msgctxt "#30210"
 msgid "Preferred TV player"
 msgstr "נגן סדרות מועדף"
 
-msgctxt "#32211"
+msgctxt "#30211"
 msgid "Preferred TV player from library"
 msgstr "נגן סדרות מועדף בניגון מספריה"
 
-msgctxt "#32300"
+msgctxt "#30300"
 msgid "Library"
 msgstr "ספריה"
 
-msgctxt "#32301"
+msgctxt "#30301"
 msgid "Library folder"
 msgstr "תיקיית ספריה"
 
-msgctxt "#32302"
+msgctxt "#30302"
 msgid "Library folder"
 msgstr "תיקיית ספריה"
 
-msgctxt "#32303"
+msgctxt "#30303"
 msgid "Update library"
 msgstr "עדכן ספריה"
 
-msgctxt "#32400"
+msgctxt "#30400"
 msgid "Advanced"
 msgstr "מתקדם"
 
-msgctxt "#32401"
+msgctxt "#30401"
 msgid "Clear cache"
 msgstr "נקה זיכרון מטמון"
 
-msgctxt "#32304"
+msgctxt "#30304"
 msgid "Automatic movies library server"
 msgstr "שרת עבור קיר סרטים אוטומטי"
 
-msgctxt "#32305"
+msgctxt "#30305"
 msgid "Set added time to release date"
 msgstr "קבע זמן הוספה כזמן שחרור הסרט או פרק"
 
-msgctxt "#32402"
+msgctxt "#30402"
 msgid "Use simple selection dialog"
 msgstr "השתמש בדיאלוג בחירה פשוט"
 
-msgctxt "#32404"
+msgctxt "#30404"
 msgid "Number of simultaneous searches"
 msgstr "מספר חיפושים לבצע במקביל"
 
-msgctxt "#32410"
+msgctxt "#30410"
 msgid "Attempt to hide dialogs while Meta is searching"
 msgstr "הסתר חלונות משנה בזמן שהתוסף מבצע חיפוש"
 
-msgctxt "#32411"
+msgctxt "#30411"
 msgid "Hide progress dialogs"
 msgstr "הסתר חלון התקדמות"
 
-msgctxt "#32412"
+msgctxt "#30412"
 msgid "Hide information dialogs"
 msgstr "הסתר התראות מידע"
 
-msgctxt "#32413"
+msgctxt "#30413"
 msgid "Hide keyboard dialog"
 msgstr "הסתר מקלדת"
 
-msgctxt "#31000"
+msgctxt "#30600"
 msgid "Would you like to automatically set Meta as a movies video source?"
 msgstr "האם ברצונך שאגדיר באופן אוטומטי את ספריית התוסף כמקור סרטי וידאו?"
 
-msgctxt "#31001"
+msgctxt "#30601"
 msgid "Genres"
 msgstr "סגנונות"
 
-msgctxt "#31002"
+msgctxt "#30602"
 msgid "Select stream..."
 msgstr "בחר מקור הזרמה..."
 
-msgctxt "#31003"
+msgctxt "#30603"
 msgid "Show info"
 msgstr "הצג מידע"
 
-msgctxt "#31004"
+msgctxt "#30604"
 msgid "Video not found :("
 msgstr "וידאו לא נמצא :("
 
-msgctxt "#31005"
+msgctxt "#30605"
 msgid "Add to library"
 msgstr "הוסף לספריה"
 
-msgctxt "#31006"
+msgctxt "#30606"
 msgid "Do you want to remove your existing players first?"
 msgstr "האם ברצונך להסיר נגנים ישנים תחילה?"
 
-msgctxt "#31007"
+msgctxt "#30607"
 msgid "Enter password"
 msgstr "הכנס סיסמא"
 
-msgctxt "#31008"
+msgctxt "#30608"
 msgid "Players updated"
 msgstr "נגנים עודכנו"
 
-msgctxt "#31009"
+msgctxt "#30609"
 msgid "Enable players"
 msgstr "אפשר נגנים"
 
-msgctxt "#31010"
+msgctxt "#30610"
 msgid "Season"
 msgstr "עונה"
 
-msgctxt "#31012"
+msgctxt "#30612"
 msgid "Top rated"
 msgstr "המדורגים ביותר"
 
-msgctxt "#31013"
+msgctxt "#30613"
 msgid "Blockbusters"
 msgstr "שוברי קופות"
 
-msgctxt "#31014"
+msgctxt "#30614"
 msgid "On the air"
 msgstr "משודר כעת"
 
-msgctxt "#31015"
+msgctxt "#30615"
 msgid "Update players"
 msgstr "עדכן נגנים"
 
-msgctxt "#31016"
+msgctxt "#30616"
 msgid "Would you like to automatically set Meta as a tv shows source?"
 msgstr "האם ברצונך שאגדיר באופן אוטומטי את ספריית התוסף כמקור תוכניות טלוויזיה?"
 
-msgctxt "#31017"
+msgctxt "#30617"
 msgid "Search"
 msgstr "חיפוש"
 
-msgctxt "#31018"
+msgctxt "#30618"
 msgid "search for"
 msgstr "חפש את"
 
-msgctxt "#31019"
+msgctxt "#30619"
 msgid "Next >>"
 msgstr "הבא >>"
 
-msgctxt "#31020"
+msgctxt "#30620"
 msgid "Error"
 msgstr "שגיאה"
 
-msgctxt "#31021"
+msgctxt "#30621"
 msgid "Popular"
 msgstr "פופולרי"
 
-msgctxt "#31022"
+msgctxt "#30622"
 msgid "Select default player"
 msgstr "בחר נגן ברירת מחדל"
 
-msgctxt "#31023"
+msgctxt "#30623"
 msgid "Failed to update players"
 msgstr "נכשל בעדכון נגנים"
 
-msgctxt "#31024"
+msgctxt "#30624"
 msgid "In theatres"
 msgstr "בקולנוע"
 
-msgctxt "#31025"
+msgctxt "#30625"
 msgid "Select player"
 msgstr "בחר נגן"
 
-msgctxt "#31026"
+msgctxt "#30626"
 msgid "Warning"
 msgstr "אזהרה"
 
-msgctxt "#31027"
+msgctxt "#30627"
 msgid "Library setup"
 msgstr "הגדרת ספריה"
 
-msgctxt "#31028"
+msgctxt "#30628"
 msgid "Play with..."
 msgstr "נגן באמצעות..."

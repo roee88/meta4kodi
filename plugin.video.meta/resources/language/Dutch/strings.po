@@ -15,214 +15,214 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.8.7\n"
 
-msgctxt "#32000"
+msgctxt "#30000"
 msgid "General"
 msgstr "Algemeen"
 
-msgctxt "#32010"
+msgctxt "#30010"
 msgid "Players URL"
 msgstr "Spelers URL"
 
-msgctxt "#32012"
+msgctxt "#30012"
 msgid "Install from URL"
 msgstr "Installeer van URL"
 
-msgctxt "#32100"
+msgctxt "#30100"
 msgid "Movies"
 msgstr "Films"
 
-msgctxt "#32110"
+msgctxt "#30110"
 msgid "Enable movie players"
 msgstr "Film spelers activeren"
 
-msgctxt "#32120"
+msgctxt "#30120"
 msgid "Preferred movie player"
 msgstr "Voorkeurs film speler"
 
-msgctxt "#32121"
+msgctxt "#30121"
 msgid "Preferred movie player from library"
 msgstr "Voorkeurs film speler vanuit bibliotheek"
 
-msgctxt "#32200"
+msgctxt "#30200"
 msgid "TV Shows"
 msgstr "TV-Series"
 
-msgctxt "#32201"
+msgctxt "#30201"
 msgid "Enable TV players"
 msgstr "TV spelers activeren"
 
-msgctxt "#32210"
+msgctxt "#30210"
 msgid "Preferred TV player"
 msgstr "Voorkeurs TV speler"
 
-msgctxt "#32211"
+msgctxt "#30211"
 msgid "Preferred TV player from library"
 msgstr "Voorkeurs TV speler vanuit bibliotheek"
 
-msgctxt "#32300"
+msgctxt "#30300"
 msgid "Library"
 msgstr "Bibliotheek"
 
-msgctxt "#32301"
+msgctxt "#30301"
 msgid "Library folder"
 msgstr "Bibliotheek map"
 
-msgctxt "#32302"
+msgctxt "#30302"
 msgid "Library folder"
 msgstr "Bibliotheek map"
 
-msgctxt "#32303"
+msgctxt "#30303"
 msgid "Update library"
 msgstr "Bibliotheek bijwerken"
 
-msgctxt "#32400"
+msgctxt "#30400"
 msgid "Advanced"
 msgstr "Geavanceerd"
 
-msgctxt "#32401"
+msgctxt "#30401"
 msgid "Clear cache"
 msgstr "Cache wissen"
 
-msgctxt "#32304"
+msgctxt "#30304"
 msgid "Automatic movies library server"
 msgstr "Automatische film bibliotheek server"
 
-msgctxt "#32305"
+msgctxt "#30305"
 msgid "Set added time to release date"
 msgstr "Zet tijd van toevoegen bij uitgave datum"
 
-msgctxt "#32402"
+msgctxt "#30402"
 msgid "Use simple selection dialog"
 msgstr "Gebruik simpel selectie dialoog"
 
-msgctxt "#32404"
+msgctxt "#30404"
 msgid "Number of simultaneous searches"
 msgstr "Aantal gelijktijdige zoekopdrachten"
 
-msgctxt "#32410"
+msgctxt "#30410"
 msgid "Attempt to hide dialogs while Meta is searching"
 msgstr "Probeer dialoogvensters te verbergen terwijl Meta aan het zoeken is"
 
-msgctxt "#32411"
+msgctxt "#30411"
 msgid "Hide progress dialogs"
 msgstr "Verberg voortgangs dialogen"
 
-msgctxt "#32412"
+msgctxt "#30412"
 msgid "Hide information dialogs"
 msgstr "Verberg informatie dialogen"
 
-msgctxt "#32413"
+msgctxt "#30413"
 msgid "Hide keyboard dialog"
 msgstr "Verberg keyboard dialogen"
 
-msgctxt "#31000"
+msgctxt "#30600"
 msgid "Would you like to automatically set Meta as a movies video source?"
 msgstr "Wilt u Meta automatisch als film bron instellen?"
 
-msgctxt "#31001"
+msgctxt "#30601"
 msgid "Genres"
 msgstr "Genres"
 
-msgctxt "#31002"
+msgctxt "#30602"
 msgid "Select stream..."
 msgstr "Selecteer stream..."
 
-msgctxt "#31003"
+msgctxt "#30603"
 msgid "Show info"
 msgstr "Toon info"
 
-msgctxt "#31004"
+msgctxt "#30604"
 msgid "Video not found :("
 msgstr "Video niet gevonden :("
 
-msgctxt "#31005"
+msgctxt "#30605"
 msgid "Add to library"
 msgstr "Voeg toe aan bibliotheek"
 
-msgctxt "#31006"
+msgctxt "#30606"
 msgid "Do you want to remove your existing players first?"
 msgstr "Wilt u uw huidige spelers eerst verwijderen?"
 
-msgctxt "#31007"
+msgctxt "#30607"
 msgid "Enter password"
 msgstr "Vul wachtwoord in"
 
-msgctxt "#31008"
+msgctxt "#30608"
 msgid "Players updated"
 msgstr "Spelers bijgewerkt"
 
-msgctxt "#31009"
+msgctxt "#30609"
 msgid "Enable players"
 msgstr "Spelers activeren"
 
-msgctxt "#31010"
+msgctxt "#30610"
 msgid "Season"
 msgstr "Seizoen"
 
-msgctxt "#31012"
+msgctxt "#30612"
 msgid "Top rated"
 msgstr "Meest gewaardeerd"
 
-msgctxt "#31013"
+msgctxt "#30613"
 msgid "Blockbusters"
 msgstr "Kaskrakers"
 
-msgctxt "#31014"
+msgctxt "#30614"
 msgid "On the air"
 msgstr "Nu op TV"
 
-msgctxt "#31015"
+msgctxt "#30615"
 msgid "Update players"
 msgstr "Spelers bijwerken"
 
-msgctxt "#31016"
+msgctxt "#30616"
 msgid "Would you like to automatically set Meta as a tv shows source?"
 msgstr "Wilt u Meta automatisch als TV bron instellen?"
 
-msgctxt "#31017"
+msgctxt "#30617"
 msgid "Search"
 msgstr "Zoeken"
 
-msgctxt "#31018"
+msgctxt "#30618"
 msgid "search for"
 msgstr "zoeken naar"
 
-msgctxt "#31019"
+msgctxt "#30619"
 msgid "Next >>"
 msgstr "Volgende >>"
 
-msgctxt "#31020"
+msgctxt "#30620"
 msgid "Error"
 msgstr "Fout"
 
-msgctxt "#31021"
+msgctxt "#30621"
 msgid "Popular"
 msgstr "Populair"
 
-msgctxt "#31022"
+msgctxt "#30622"
 msgid "Select default player"
 msgstr "Selecteer standaard speler"
 
-msgctxt "#31023"
+msgctxt "#30623"
 msgid "Failed to update players"
 msgstr "Bijwerken spelers mislukt"
 
-msgctxt "#31024"
+msgctxt "#30624"
 msgid "In theatres"
 msgstr "In de bioscoop"
 
-msgctxt "#31025"
+msgctxt "#30625"
 msgid "Select player"
 msgstr "Selecteer speler"
 
-msgctxt "#31026"
+msgctxt "#30626"
 msgid "Warning"
 msgstr "Waarschuwing"
 
-msgctxt "#31027"
+msgctxt "#30627"
 msgid "Library setup"
 msgstr "Bibliotheek instellen"
 
-msgctxt "#31028"
+msgctxt "#30628"
 msgid "Play with..."
 msgstr "Afspelen met..."
