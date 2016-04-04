@@ -14,8 +14,13 @@ from language import get_string as _
 API_ENDPOINT = "https://api-v2launch.trakt.tv"
 CLIENT_ID = "578aa4af9acbb324d42ff08a7a1eeeab3d329a3c259abd58aab107f23351d870"
 CLIENT_SECRET = "41deac2a06e008f5fea43ec916f17949be520450f37874cc2f3fdeeaa861f529"
+LIST_PRIVACY_IDS = (
+    'private',
+    'friends',
+    'public'
+)
 
-def call_trakt(path, params={}, data=None, with_auth=True):
+def call_trakt(path, params={}, data=None, is_delete=False, with_auth=True):
     params = dict([(k, to_utf8(v)) for k, v in params.items() if v])
     
     headers = {
@@ -26,12 +31,21 @@ def call_trakt(path, params={}, data=None, with_auth=True):
     
     def send_query():
         if with_auth:
+            try:
+                expires_at = plugin.get_setting(SETTING_TRAKT_EXPIRES_AT, converter=int)
+                if time.time() > expires_at:
+                    trakt_refresh_token()
+            except:
+                pass
+                
             token = plugin.get_setting(SETTING_TRAKT_ACCESS_TOKEN)
             if token:
                 headers['Authorization'] = 'Bearer ' + token
         if data is not None:
             assert not params
             return requests.post("{0}/{1}".format(API_ENDPOINT, path), json=data, headers=headers)
+        elif is_delete:
+            return requests.delete("{0}/{1}".format(API_ENDPOINT, path), headers=headers)
         else:
             return requests.get("{0}/{1}".format(API_ENDPOINT, path), params, headers=headers)
             
@@ -124,6 +138,8 @@ def trakt_authenticate():
     code = trakt_get_device_code()
     token = trakt_get_device_token(code)
     if token:
+        expires_at = time.time() + 60*60*24*30#*3
+        plugin.set_setting(SETTING_TRAKT_EXPIRES_AT, expires_at)
         plugin.set_setting(SETTING_TRAKT_ACCESS_TOKEN, token["access_token"])
         plugin.set_setting(SETTING_TRAKT_REFRESH_TOKEN, token["refresh_token"])
         return True
@@ -137,6 +153,31 @@ def trakt_get_collection(type):
 def trakt_get_watchlist(type):
     return call_trakt("sync/watchlist/{0}".format(type), params={'extended':'full,images'})
 
+@plugin.cached(TTL=CACHE_TTL, cache="trakt")
+def trakt_get_lists(self):
+    return call_trakt("users/me/lists")
+
+@plugin.cached(TTL=CACHE_TTL, cache="trakt")
+def trakt_get_liked_lists(self):
+    return call_trakt("users/likes/lists")
+
+@plugin.cached(TTL=CACHE_TTL, cache="trakt")
+def get_list(self, list_slug):
+    path = "users/me/lists/{0}/items".format(list_slug)
+    return call_trakt(path, params={'extended':'full,images'})
+
+def add_list(self, name, privacy_id=None, description=None):
+    data = {
+        'name': name,
+        'description': description or '',
+        'privacy': privacy_id or LIST_PRIVACY_IDS[0]
+    }
+    return call_trakt("users/me/lists", data=data)
+
+def del_list(self, list_slug):
+    path = "users/me/lists/{0}".format(list_slug)
+    return call_trakt(path, is_delete=True)
+    
 @plugin.cached(TTL=60*24, cache="trakt")
 def trakt_get_genres(type):
     return call_trakt("genres/{0}".format(type))
