@@ -1,3 +1,8 @@
+v1.1.1
+- Initial trakt support (by midraal)
+- Live TV support (by midraal)
+- Bug fixes
+
 v1.1.0
 - Changed keyboard hiding method (enable in advanced settings)
 - Adjustable pool size in advanced settings
