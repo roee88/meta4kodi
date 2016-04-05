@@ -280,3 +280,19 @@ msgstr ""
 msgctxt "#30510"
 msgid "Prefered Live Player"
 msgstr ""
+
+msgctxt "#30001"
+msgid "Move down"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Move up"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Clear channels"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Remove channel"
+msgstr ""

@@ -117,3 +117,7 @@ _ALL['my calendar'] = 30423
 _ALL['live'] = 30500
 _ALL['enable live players'] = 30501
 _ALL['prefered live player'] = 30510
+_ALL['move down'] = 30001
+_ALL['move up'] = 30002
+_ALL['clear channels'] = 30003
+_ALL['remove channel'] = 30004

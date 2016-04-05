@@ -226,3 +226,73 @@ msgstr "הגדרת ספריה"
 msgctxt "#30628"
 msgid "Play with..."
 msgstr "נגן באמצעות..."
+
+msgctxt "#30414"
+msgid "Trakt watchlist"
+msgstr "Trakt רשימת צפייה"
+
+msgctxt "#30415"
+msgid "Please go to https://trakt.tv/activate and enter the code"
+msgstr "גש לאתר הבא מכל מכשיר והכנס את הקוד המופיע מטה https://trakt.tv/activate"
+
+msgctxt "#30416"
+msgid "Next episodes"
+msgstr "פרקים הבאים"
+
+msgctxt "#30417"
+msgid "Authenticate Trakt"
+msgstr "היכנס לחשבון Trakt"
+
+msgctxt "#30418"
+msgid "Add all to library"
+msgstr "הוסף הכל לספריה"
+
+msgctxt "#30419"
+msgid ""
+"Are you sure you want to add your entire Trakt collection to Kodi library?"
+msgstr "האם אתה בטוח שברצונך להוסיף את כל האוסף לספרית קודי?"
+
+msgctxt "#30420"
+msgid "Trakt collection"
+msgstr "Trakt אוסף"
+
+msgctxt "#30421"
+msgid ""
+"Are you sure you want to add your entire Trakt watchlist to Kodi library?"
+msgstr "האם אתה בטוח שברצונך להוסיף את כל רשימת הצפייה לספרית קודי?"
+
+msgctxt "#30422"
+msgid "You must authenticate with Trakt. Do you want to authenticate now?"
+msgstr "עדיין לא נכנסת לחשבון Trakt. האם ברצונך לעשות זאת כעת?"
+
+msgctxt "#30423"
+msgid "My calendar"
+msgstr "לוח השנה שלי"
+
+msgctxt "#30500"
+msgid "Live"
+msgstr "לייב"
+
+msgctxt "#30501"
+msgid "Enable Live Players"
+msgstr "אפשר נגני לייב"
+
+msgctxt "#30510"
+msgid "Prefered Live Player"
+msgstr "נגן לייב מועדף"
+
+msgctxt "#30001"
+msgid "Move down"
+msgstr "הזז מטה"
+
+msgctxt "#30002"
+msgid "Move up"
+msgstr "הזז מעלה"
+
+msgctxt "#30003"
+msgid "Clear channels"
+msgstr "נקה כל הערוצים"
+
+msgctxt "#30004"
+msgid "Remove channel"
+msgstr "הסר ערוץ"
