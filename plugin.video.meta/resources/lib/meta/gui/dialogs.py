@@ -204,13 +204,16 @@ class SelectorDialog(xbmcgui.WindowXMLDialog):
                 
             self.list.reset()        
             for item in links:
-                pluginid = item['path'].split("/")[2]
-                icon = xbmcaddon.Addon(id=pluginid).getAddonInfo('icon')
-                
                 listitem = xbmcgui.ListItem(item['label'])
                 listitem.setProperty("Path", item['path'])
-                listitem.setIconImage(icon)
-                
+ 
+                try:
+                    pluginid = item['path'].split("/")[2]
+                    icon = xbmcaddon.Addon(id=pluginid).getAddonInfo('icon')
+                    listitem.setIconImage(icon)
+                except:
+                    pass
+                                   
                 self.list.addItem(listitem)
 
             self.insideIndex = num
