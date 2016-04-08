@@ -46,7 +46,7 @@ def root():
         {
             'label': _("Live"),
             'path': plugin.url_for("live"),
-            'icon': get_icon_path("tv"),
+            'icon': get_icon_path("live"),
         }
     ]
     

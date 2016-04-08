@@ -38,7 +38,7 @@ def movies():
         {
             'label': _("In theatres"),
             'path': plugin.url_for(movies_now_playing, page='1'),
-            'icon': get_icon_path("movies"),
+            'icon': get_icon_path("intheatres"),
         },
         {
             'label': _("Top rated"),
@@ -53,7 +53,7 @@ def movies():
         {
             'label': _("Trakt collection"),
             'path': plugin.url_for(movies_trakt_collection),
-            'icon': get_icon_path("movies"), # TODO
+            'icon': get_icon_path("traktcollection"), # TODO
             'context_menu': [
                 (
                     _("Add to library"),
@@ -64,7 +64,7 @@ def movies():
         {
             'label': _("Trakt watchlist"),
             'path': plugin.url_for(movies_trakt_watchlist),
-            'icon': get_icon_path("movies"), # TODO
+            'icon': get_icon_path("traktwatchlist"), # TODO
             'context_menu': [
                 (
                     _("Add to library"),
