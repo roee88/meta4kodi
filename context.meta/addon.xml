@@ -9,7 +9,7 @@
   <extension point="kodi.context.item" library="context_playable.py">
     <provides>executable</provides>	
       <item>
-        <label>$ADDON[plugin.video.meta 31002]</label>
+        <label>$ADDON[plugin.video.meta 30622]</label>
         <visible>[StringCompare(ListItem.dbtype,movie) | StringCompare(ListItem.dbtype,episode)]</visible>        
       </item>
   </extension>

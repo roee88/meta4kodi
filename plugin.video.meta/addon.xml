@@ -16,7 +16,7 @@
   <extension point="kodi.context.item" library="context_playable.py">
     <provides>executable</provides>	
       <item>
-        <label>$ADDON[plugin.video.meta 31002]</label>
+        <label>$ADDON[plugin.video.meta 30622]</label>
         <visible>!System.HasAddon(context.meta) + [StringCompare(ListItem.dbtype,movie) | StringCompare(ListItem.dbtype,episode)] + SubString(ListItem.FileNameAndPath, plugin.video.meta)</visible>
       </item>
   </extension>
@@ -24,7 +24,7 @@
   <extension point="kodi.context.item" library="context_tvshow.py">
     <provides>executable</provides>	
       <item>
-        <label>$ADDON[plugin.video.meta 31022]</label>
+        <label>$ADDON[plugin.video.meta 30622]</label>
         <visible>StringCompare(ListItem.dbtype,tvshow) + SubString(ListItem.Path, plugin.video.meta)</visible>
       </item>
   </extension>
