@@ -18,7 +18,7 @@ def caller_args():
     args, _, _, values = inspect.getargvalues(caller)
     return dict([(i, values[i]) for i in args])
 
-def search(search_func):
+def search(search_func, term = None):
     """ Search wrapper """
     external = False
     if plugin.id == xbmc.getInfoLabel('Container.PluginName'):
@@ -29,11 +29,14 @@ def search(search_func):
     else:
         external = True
 
-    # Get search keyword
-    search_entered = plugin.keyboard(heading=_("search for"))
-    if not search_entered:
-        return
-    
+    if term is None:
+        # Get search keyword
+        search_entered = plugin.keyboard(heading=_("search for"))
+        if not search_entered:
+            return
+
+    else:
+        search_entered = term
     # Perform search
     url = plugin.url_for(search_func, term=search_entered, page='1')
     if external:

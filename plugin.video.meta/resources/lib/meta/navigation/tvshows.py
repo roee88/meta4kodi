@@ -6,7 +6,7 @@ from xbmcswift2 import xbmc, xbmcvfs
 from meta import plugin, import_tmdb, import_tvdb, LANG
 from meta.gui import dialogs
 from meta.info import get_tvshow_metadata_tvdb, get_season_metadata_tvdb, get_episode_metadata_tvdb, get_tvshow_metadata_trakt
-from meta.utils.text import parse_year, is_ascii
+from meta.utils.text import parse_year, is_ascii, to_utf8
 from meta.utils.executor import execute
 from meta.utils.properties import set_property
 from meta.library.tvshows import setup_library, add_tvshow_to_library
@@ -92,6 +92,34 @@ def tv():
 def tv_search():
     """ Activate movie search """
     search(tv_search_term)
+
+@plugin.route('/tv/play_by_name/<name>/<season>/<episode>/<lang>')
+def tv_play_by_name(name, season, episode, lang = "en"):
+    """ Activate tv search """
+    import_tvdb()
+
+    search_results = tvdb.search(name, language= lang)
+
+    if search_results == []:
+        dialogs.ok(_("Show not found"), "{0} {1} in tvdb".format(_("no show information found for"), to_utf8(name)))
+        return
+
+    items = []
+    for show in search_results:
+        if "firstaired" in show:
+            show["year"] = int(show['firstaired'].split("-")[0].strip())
+        else:
+            show["year"] = 0
+        items.append(show)
+
+    if len(items) > 1:
+        selection = dialogs.select(_("Choose Show"), ["{0} ({1})".format(
+            to_utf8(s["seriesname"]), s["year"]) for s in items])
+    else:
+        selection = 0
+    if selection != -1:
+        id = items[selection]["id"]
+        tv_play(id, season, episode, "default")
 
 @plugin.route('/tv/search_term/<term>/<page>')
 def tv_search_term(term, page):

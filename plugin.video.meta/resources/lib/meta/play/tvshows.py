@@ -3,6 +3,7 @@ import json
 from xbmcswift2 import xbmc
 
 from meta import plugin, import_tmdb, import_tvdb, create_tvdb, LANG
+from meta.gui import dialogs
 from meta.utils.properties import set_property
 from meta.utils.text import to_unicode 
 from meta.library.tvshows import get_player_plugin_from_library
@@ -60,7 +61,11 @@ def play_episode(id, season, episode, mode):
             tvdb_data = create_tvdb(lang)[id]
         if tvdb_data['seriesname'] is None:
             continue
-        params[lang] = get_episode_parameters(tvdb_data, season, episode)
+        episode_parameters = get_episode_parameters(tvdb_data, season, episode)
+        if episode_parameters is not None:
+            params[lang] = get_episode_parameters(tvdb_data, season, episode)
+        else:
+            return
         params[lang].update(trakt_ids)
         params[lang]['info'] = show_info
         params[lang] = to_unicode(params[lang])
@@ -89,7 +94,12 @@ def play_episode(id, season, episode, mode):
 def get_episode_parameters(show, season, episode):
     import_tmdb()
     
-    episode_obj = show[season][episode]
+    if season in show and episode in show[season]:
+        episode_obj = show[season][episode]
+    else:
+        dialogs.ok(_("Episode info not found"), "No tvdb information found for {0} - S{1}E{2}".format(
+            show['seriesname'], season, episode))
+        return
     
     # Get parameters
     parameters = {'id': show['id'], 'season': season, 'episode': episode}
