@@ -70,13 +70,13 @@ def make_trailer(trailer_url):
     
 def get_tvshow_metadata_trakt(show, genres_dict):
     info = {}
-    
+
     info['title'] = show['title']
     info['year'] = show['year']
     info['name'] = u'%s (%s)' % (info['title'], info['year'])
 
     info['tvshowtitle'] = info['title']
-    
+
     info['premiered'] = show.get('released')
     info['rating'] = show.get('rating')
     info['votes'] = show.get('votes')
@@ -92,18 +92,18 @@ def get_tvshow_metadata_trakt(show, genres_dict):
     info['trakt_id'] = show['ids'].get('trakt_id')
     info['imdb_id'] = show['ids'].get('imdb')
     info['tvdb_id'] = show['ids'].get('tvdb')
-    
+
     info['poster'] = show['images']['poster']['thumb']
-    info['fanart'] = show['images']['fanart']['medium']    
+    info['fanart'] = show['images']['fanart']['medium']
 
     if genres_dict:
         info['genre'] = u" / ".join([genres_dict[x] for x in show['genres']])
 
     if show.get('trailer'):
         info['trailer'] = make_trailer(show['trailer'])
-            
+
     return info
-    
+
 def get_tvshow_metadata_tvdb(tvdb_show, banners=True):
     info = {}
     
@@ -139,6 +139,17 @@ def get_season_metadata_tvdb(show_metadata, season, banners=True):
 
     return info
 
+def get_season_metadata_trakt(show_metadata, season, banners=True):
+    info = copy.deepcopy(show_metadata)
+
+    del info['title']
+
+    info['season'] = season["number"]
+    if banners:
+        info['poster'] = season["images"]["poster"]["thumb"]
+
+    return info
+
 def get_episode_metadata_tvdb(season_metadata, episode, banners=True):
     info = copy.deepcopy(season_metadata)
     
@@ -154,4 +165,21 @@ def get_episode_metadata_tvdb(season_metadata, episode, banners=True):
     if banners:
         info['poster'] = episode['filename']
         
+    return info
+
+def get_episode_metadata_trakt(show_metadata, episode, banners=True):
+    info = copy.deepcopy(show_metadata)
+
+    info['episode'] = episode.get('number')
+    info['title'] = episode.get('title','')
+    info['aired'] = episode.get('first_aired','')
+    info['premiered'] = episode.get('first_aired','')
+    info['rating'] = episode.get('rating', '')
+    info['plot'] = episode.get('overview','')
+    info['plotoutline'] = episode.get('overview','')
+    info['votes'] = episode.get('votes','')
+
+    if banners:
+        info['poster'] = episode['images']['screenshot']["thumb"]
+
     return info

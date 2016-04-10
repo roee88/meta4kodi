@@ -53,7 +53,7 @@ def movies():
         {
             'label': _("Trakt collection"),
             'path': plugin.url_for(movies_trakt_collection),
-            'icon': get_icon_path("traktcollection"), # TODO
+            'icon': get_icon_path("traktcollection"),
             'context_menu': [
                 (
                     _("Add to library"),
@@ -64,13 +64,18 @@ def movies():
         {
             'label': _("Trakt watchlist"),
             'path': plugin.url_for(movies_trakt_watchlist),
-            'icon': get_icon_path("traktwatchlist"), # TODO
+            'icon': get_icon_path("traktwatchlist"),
             'context_menu': [
                 (
                     _("Add to library"),
                     "RunPlugin({0})".format(plugin.url_for(movies_trakt_watchlist_to_library))
                 )
             ],
+        },
+        {
+            'label': _("Trakt recommendations"),
+            'path': plugin.url_for(movies_trakt_recommendations),
+            'icon': get_icon_path("traktrecommendations"),
         },
     ]
 
@@ -166,6 +171,16 @@ def movies_trakt_watchlist():
     from trakt import trakt
     result = trakt.trakt_get_watchlist("movies")
     return plugin.finish(list_trakt_movies(result), sort_methods=MOVIE_SORT_METHODS)
+
+@plugin.route('/movies/trakt/recommendations')
+def movies_trakt_recommendations():
+    from trakt import trakt
+    genres_dict = dict([(x['slug'], x['name']) for x in trakt.trakt_get_genres("movies")])
+    movies = trakt.get_recommendations("movies")
+    items = []
+    for movie in movies:
+        items.append(make_movie_item(get_trakt_movie_metadata(movie, genres_dict)))
+    return items
     
 @plugin.route('/movies/trakt/collection_to_library')
 def movies_trakt_collection_to_library():
@@ -259,7 +274,7 @@ def list_trakt_movies(results):
     items = [make_movie_item(movie) for movie in movies]
     return items
     
-def make_movie_item(movie_info):
+def make_movie_item(movie_info, is_list = False):
 
     tmdb_id = movie_info.get('tmdb')
     imdb_id = movie_info.get('imdb')
@@ -274,21 +289,34 @@ def make_movie_item(movie_info):
     context_menu = [
      (
        _("Select stream..."),
-       "PlayMedia({0})".format(plugin.url_for(movies_play, src=src, id=id, mode='select'))
+       "PlayMedia({0})".format(plugin.url_for("movies_play", src=src, id=id, mode='select'))
      ),                
      (
       _("Add to library"), 
-      "RunPlugin({0})".format(plugin.url_for(movies_add_to_library, src=src, id=id))
+      "RunPlugin({0})".format(plugin.url_for("movies_add_to_library", src=src, id=id))
+     ),
+     (
+      _("Add to list"),
+      "RunPlugin({0})".format(plugin.url_for("lists_add_movie_to_list", src=src, id=id))
      ),
      (
       _("Show info"),
       'Action(Info)'
      ),
     ]
+
+    if is_list:
+        context_menu.append(
+            (
+                _("Remove from list"),
+                "RunPlugin({0})".format(plugin.url_for("lists_remove_movie_from_list", src=src, id=id))
+            )
+        )
+
     
     return {
         'label': movie_info['title'],
-        'path': plugin.url_for(movies_play, src=src, id=id, mode='default'),
+        'path': plugin.url_for("movies_play", src=src, id=id, mode='default'),
         'context_menu': context_menu,
         'thumbnail': movie_info['poster'],
         'icon': "DefaultVideo.png",

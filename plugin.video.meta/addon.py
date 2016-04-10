@@ -20,6 +20,7 @@ from meta.play.players import get_players, ADDON_SELECTOR
 import meta.navigation.movies
 import meta.navigation.tvshows
 import meta.navigation.live
+import meta.navigation.lists
 from meta.navigation.base import get_icon_path
 from meta.play.base import active_players
 
@@ -47,6 +48,11 @@ def root():
             'label': _("Live"),
             'path': plugin.url_for("live"),
             'icon': get_icon_path("live"),
+        },
+        {
+            'label': _("Lists"),
+            'path': plugin.url_for("lists"),
+            'icon': get_icon_path("lists"),
         }
     ]
     
