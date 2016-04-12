@@ -100,12 +100,46 @@ def tv_search():
     """ Activate movie search """
     search(tv_search_term)
 
-@plugin.route('/tv/play_by_name/<name>/<season>/<episode>/<lang>')
-def tv_play_by_name(name, season, episode, lang = "en"):
+@plugin.route('/tv/play_by_name/<name>/<season>/<episode>/<lang>', options = {"lang": "en"})
+def tv_play_by_name(name, season, episode, lang):
     """ Activate tv search """
+    tvdb_id = get_tvdb_id_from_name(name, lang)
+    if tvdb_id:
+        tv_play(tvdb_id, season, episode, "default")
+
+@plugin.route('/tv/play_by_name_only/<name>/<lang>', options = {"lang": "en"})
+def tv_play_by_name_only(name, lang):
+    tvdb_id = get_tvdb_id_from_name(name, lang)
+    if tvdb_id:
+        season = None
+        episode = None
+        show = tv_tvshow(tvdb_id)
+
+        while season is None or episode is None:  # don't exit completely if pressing back from episode selector
+            selection = dialogs.select(_("Choose season"), [item["label"] for item in show])
+            if selection != -1:
+                season = show[selection]["info"]["season"]
+                season = int(season)
+            else:
+                return
+            items = []
+            episodes = tv_season(tvdb_id, season)
+            for item in episodes:
+                label = "S{0}E{1} - {2}".format(item["info"]["season"], item["info"]["episode"],
+                                                to_utf8(item["info"]["title"]))
+                if item["info"]["plot"] is not None:
+                    label += " - {0}".format(to_utf8(item["info"]["plot"]))
+                items.append(label)
+            selection = dialogs.select(_("Choose episode"), items)
+            if selection != -1:
+                episode = episodes[selection]["info"]["episode"]
+                episode = int(episode)
+                tv_play(tvdb_id, season, episode, "default")
+
+def get_tvdb_id_from_name(name, lang):
     import_tvdb()
 
-    search_results = tvdb.search(name, language= lang)
+    search_results = tvdb.search(name, language=lang)
 
     if search_results == []:
         dialogs.ok(_("Show not found"), "{0} {1} in tvdb".format(_("no show information found for"), to_utf8(name)))
@@ -125,8 +159,8 @@ def tv_play_by_name(name, season, episode, lang = "en"):
     else:
         selection = 0
     if selection != -1:
-        id = items[selection]["id"]
-        tv_play(id, season, episode, "default")
+        return items[selection]["id"]
+
 
 @plugin.route('/tv/search_term/<term>/<page>')
 def tv_search_term(term, page):

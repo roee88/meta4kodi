@@ -6,7 +6,7 @@ from meta.play.base import active_players, action_cancel, action_play, on_play_v
 
 from settings import SETTING_USE_SIMPLE_SELECTOR, SETTING_LIVE_DEFAULT_PLAYER
 
-def play_channel(channel, mode="default"):
+def play_channel(channel, program, language, mode="default"):
     # Get players to use
     if mode == 'select':
         play_plugin = ADDON_SELECTOR.id
@@ -22,7 +22,7 @@ def play_channel(channel, mode="default"):
     # Get parameters
     params = {}
     for lang in get_needed_langs(players):
-        params[lang] = get_channel_parameters(channel)
+        params[lang] = get_channel_parameters(channel, program, language)
         params[lang] = to_unicode(params[lang])
 
     # Go for it
@@ -35,7 +35,7 @@ def play_channel(channel, mode="default"):
             'info_type': 'video',
         })
 
-def get_channel_parameters(channel):
+def get_channel_parameters(channel, program, language):
     channel_regex = re.compile("(.+?)\s*(\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s*.*?(\d*)$",
                                re.IGNORECASE|re.UNICODE)
     parameters = {}
@@ -43,5 +43,7 @@ def get_channel_parameters(channel):
     parameters['basename'] = re.sub(channel_regex, r"\1",channel)
     parameters['extension'] = re.sub(channel_regex, r"\2",channel)
     parameters['delay'] = re.sub(channel_regex, r"\3", channel)
+    parameters['program'] = program
+    parameters['language'] = language
 
     return parameters
