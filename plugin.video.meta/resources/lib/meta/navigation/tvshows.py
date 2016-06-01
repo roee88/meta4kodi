@@ -229,8 +229,17 @@ def tv_trakt_watchlist_to_library():
 @plugin.route('/tv/trakt/next_episodes')
 def tv_trakt_next_episodes():
     from trakt import trakt
+    list = []
     result = trakt.trakt_get_next_episodes()
-    return list_trakt_episodes(result)
+    for episode in result:
+        trakt_id = episode["show"]["ids"]["trakt"]
+        episode_info = trakt.get_episode(trakt_id, episode["season"], episode["number"])
+        first_aired_string = episode_info["first_aired"]
+        if first_aired_string:
+            first_aired = time.mktime(time.strptime(first_aired_string[:19], "%Y-%m-%dT%H:%M:%S"))
+            if first_aired < time.time():
+                list.append(episode)
+    return list_trakt_episodes(list)
     
 @plugin.route('/tv/trakt/calendar')
 def tv_trakt_calendar():
