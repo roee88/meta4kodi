@@ -141,7 +141,7 @@ def get_tvdb_id_from_name(name, lang):
 
     search_results = tvdb.search(name, language=lang)
 
-    if search_results == []:
+    if not search_results:
         dialogs.ok(_("Show not found"), "{0} {1} in tvdb".format(_("no show information found for"), to_utf8(name)))
         return
 

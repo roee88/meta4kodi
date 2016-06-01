@@ -63,9 +63,12 @@ def play_episode(id, season, episode, mode):
             continue
         episode_parameters = get_episode_parameters(tvdb_data, season, episode)
         if episode_parameters is not None:
-            params[lang] = get_episode_parameters(tvdb_data, season, episode)
+            params[lang] = episode_parameters
         else:
+            msg = "{0} {1} - S{1}E{2}".format(_("No tvdb information found for"), show['seriesname'], season, episode)
+            dialogs.ok(_("Episode info not found"), msg)
             return
+        
         params[lang].update(trakt_ids)
         params[lang]['info'] = show_info
         params[lang] = to_unicode(params[lang])
@@ -97,8 +100,6 @@ def get_episode_parameters(show, season, episode):
     if season in show and episode in show[season]:
         episode_obj = show[season][episode]
     else:
-        dialogs.ok(_("Episode info not found"), "No tvdb information found for {0} - S{1}E{2}".format(
-            show['seriesname'], season, episode))
         return
     
     # Get parameters

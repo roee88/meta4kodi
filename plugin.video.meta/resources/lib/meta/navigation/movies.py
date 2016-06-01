@@ -98,8 +98,8 @@ def movies_play_by_name(name, lang = "en"):
 
     items = tmdb.Search().movie(query=name, language=lang, page=1)["results"]
 
-    if items == []:
-        dialogs.ok(_("Movie not found"), "{0} {1}".format(_("No movie information found on TMDB for"),name))
+    if not items:
+        dialogs.ok(_("Movie not found"), "{0} {1}".format(_("No movie information found on TMDB for"), name))
         return
 
     if len(items) > 1:
@@ -108,6 +108,7 @@ def movies_play_by_name(name, lang = "en"):
             parse_year(s["release_date"])) for s in items])
     else:
         selection = 0
+        
     if selection != -1:
         id = items[selection]["id"]
         movies_play("tmdb", id, "default")
