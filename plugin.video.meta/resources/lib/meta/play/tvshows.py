@@ -37,7 +37,7 @@ def play_episode(id, season, episode, mode):
         play_plugin = ADDON_SELECTOR.id
     elif mode == 'library':
         play_plugin = get_player_plugin_from_library(id)
-        if not play_plugin:
+        if not play_plugin or play_plugin == "default":
             play_plugin = plugin.get_setting(SETTING_TV_DEFAULT_PLAYER_FROM_LIBRARY)
     else:
         play_plugin = plugin.get_setting(SETTING_TV_DEFAULT_PLAYER)
