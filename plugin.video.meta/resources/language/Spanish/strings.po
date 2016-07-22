@@ -1,0 +1,298 @@
+# Addon Name: Meta
+# Addon id: plugin.video.meta
+# Addon Provider: MetaTeam
+msgid ""
+msgstr ""
+"Project-Id-Version: Kodi Meta Addons\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2016-02-21 19:19+0200\n"
+"Last-Translator: \n"
+"Language-Team: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.7\n"
+
+msgctxt "#30000"
+msgid "General"
+msgstr "General"
+
+msgctxt "#30010"
+msgid "Players URL"
+msgstr "URL de Reproductores"
+
+msgctxt "#30012"
+msgid "Install from URL"
+msgstr "Instalar desde URL"
+
+msgctxt "#30100"
+msgid "Movies"
+msgstr "Películas"
+
+msgctxt "#30110"
+msgid "Enable movie players"
+msgstr "Activar reproductores de películas"
+
+msgctxt "#30120"
+msgid "Preferred movie player"
+msgstr "Reproductor de películas preferido"
+
+msgctxt "#30121"
+msgid "Preferred movie player from library"
+msgstr "Reproductor de películas preferido (Colección)"
+
+msgctxt "#30200"
+msgid "TV Shows"
+msgstr "Series de Tv"
+
+msgctxt "#30201"
+msgid "Enable TV players"
+msgstr "Activar reproductores de Series de TV"
+
+msgctxt "#30210"
+msgid "Preferred TV player"
+msgstr "Reproductor de Series de TV preferido"
+
+msgctxt "#30211"
+msgid "Preferred TV player from library"
+msgstr "Reproductor de Series de TV preferido (Colección)"
+
+msgctxt "#30300"
+msgid "Library"
+msgstr "Colección"
+
+msgctxt "#30301"
+msgid "Library folder"
+msgstr "Directorio de Colección"
+
+msgctxt "#30302"
+msgid "Library folder"
+msgstr "Directorio de Colección"
+
+msgctxt "#30303"
+msgid "Update library"
+msgstr "Actualizar Colección"
+
+msgctxt "#30400"
+msgid "Advanced"
+msgstr "Avanzado"
+
+msgctxt "#30401"
+msgid "Clear cache"
+msgstr "Eliminar Cache"
+
+msgctxt "#30304"
+msgid "Automatic movies library server"
+msgstr "Servidor automático para servidor de Colección"
+
+msgctxt "#30305"
+msgid "Set added time to release date"
+msgstr "Añadir tiempo de adición a la fecha de estreno"
+
+msgctxt "#30402"
+msgid "Use simple selection dialog"
+msgstr "Usar diálogo simple"
+
+msgctxt "#30404"
+msgid "Number of simultaneous searches"
+msgstr "Número de búsquedas simultaneas"
+
+msgctxt "#30410"
+msgid "Attempt to hide dialogs while Meta is searching"
+msgstr "I]ntentar ocultar diálogo mientras Meta esta buscando"
+
+msgctxt "#30411"
+msgid "Hide progress dialogs"
+msgstr "Ocultar diálogo de progreso"
+
+msgctxt "#30412"
+msgid "Hide information dialogs"
+msgstr "Ocultar diálogo de información"
+
+msgctxt "#30413"
+msgid "Hide keyboard dialog"
+msgstr "Ocultar diálogo de teclado"
+
+msgctxt "#30600"
+msgid "Would you like to automatically set Meta as a movies video source?"
+msgstr "Le gustaria configurar Meta como fuente de Películas?"
+
+msgctxt "#30601"
+msgid "Genres"
+msgstr "Género"
+
+msgctxt "#30602"
+msgid "Select stream..."
+msgstr "Reproducir usando..."
+
+msgctxt "#30603"
+msgid "Show info"
+msgstr "Montrar Info"
+
+msgctxt "#30604"
+msgid "Video not found :("
+msgstr "No en encontró video :("
+
+msgctxt "#30605"
+msgid "Add to library"
+msgstr "Añadir a Colección"
+
+msgctxt "#30606"
+msgid "Do you want to remove your existing players first?"
+msgstr "Desea eliminar los reproductores ya descargados antes de continuar?"
+
+msgctxt "#30607"
+msgid "Enter password"
+msgstr "Ingresr Password"
+
+msgctxt "#30608"
+msgid "Players updated"
+msgstr "Se actualizaron los reproductores"
+
+msgctxt "#30609"
+msgid "Enable players"
+msgstr "Activar reproductores"
+
+msgctxt "#30610"
+msgid "Season"
+msgstr "Temporada"
+
+msgctxt "#30612"
+msgid "Top rated"
+msgstr "Mejores Valorados"
+
+msgctxt "#30613"
+msgid "Blockbusters"
+msgstr "Taquilla"
+
+msgctxt "#30614"
+msgid "On the air"
+msgstr "En Emisión"
+
+msgctxt "#30615"
+msgid "Update players"
+msgstr "Actualizar reproductores"
+
+msgctxt "#30616"
+msgid "Would you like to automatically set Meta as a tv shows source?"
+msgstr "Le gustaria configurar Meta como fuente de Series de TV?"
+
+msgctxt "#30617"
+msgid "Search"
+msgstr "Buscar"
+
+msgctxt "#30618"
+msgid "search for"
+msgstr "buscar para"
+
+msgctxt "#30619"
+msgid "Next >>"
+msgstr "Siguiente >>"
+
+msgctxt "#30620"
+msgid "Error"
+msgstr "Error"
+
+msgctxt "#30621"
+msgid "Popular"
+msgstr "Populares"
+
+msgctxt "#30622"
+msgid "Select default player"
+msgstr "Seleccionar reproductor por defecto"
+
+msgctxt "#30623"
+msgid "Failed to update players"
+msgstr "Falló la actulización de los reproductores"
+
+msgctxt "#30624"
+msgid "In theatres"
+msgstr "En Cines"
+
+msgctxt "#30625"
+msgid "Select player"
+msgstr "Seleccione Reproductor"
+
+msgctxt "#30626"
+msgid "Warning"
+msgstr "Atención"
+
+msgctxt "#30627"
+msgid "Library setup"
+msgstr "Configuración de Colección"
+
+msgctxt "#30628"
+msgid "Play with..."
+msgstr "Reproducor usando..."
+
+msgctxt "#30414"
+msgid "Trakt watchlist"
+msgstr "Lista de Seguimiento de Trakt"
+
+msgctxt "#30415"
+msgid "Please go to https://trakt.tv/activate and enter the code"
+msgstr "Por favor visite https://trakt.tv/activate e ingrese el siguiente código"
+
+msgctxt "#30416"
+msgid "Next episodes"
+msgstr "Próximos Episodios"
+
+msgctxt "#30417"
+msgid "Authenticate Trakt"
+msgstr "Autenticar Trakt"
+
+msgctxt "#30418"
+msgid "Add all to library"
+msgstr "Añadir todo a Colección"
+
+msgctxt "#30419"
+msgid ""
+"Are you sure you want to add your entire Trakt collection to Kodi library?"
+msgstr "Esta seguro que desea añador toda su colección de Trakt a la Colección de Kodi?"
+
+msgctxt "#30420"
+msgid "Trakt collection"
+msgstr "Colección de Trakt"
+
+msgctxt "#30421"
+msgid ""
+"Are you sure you want to add your entire Trakt watchlist to Kodi library?"
+msgstr "Esta seguro que desea añador toda su Lista de Seguimiento de Trakt a la Colección de Kodi?"
+
+msgctxt "#30422"
+msgid "You must authenticate with Trakt. Do you want to authenticate now?"
+msgstr "Debe autenticarse en Trakt. Desea hacerlo ahora?"
+
+msgctxt "#30423"
+msgid "My calendar"
+msgstr "Mi calendario"
+
+msgctxt "#30500"
+msgid "Live"
+msgstr "En vivo"
+
+msgctxt "#30501"
+msgid "Enable Live Players"
+msgstr "Activar reproductores para "En Vivo""
+
+msgctxt "#30510"
+msgid "Prefered Live Player"
+msgstr "Reproductor "En Vivo" preferido"
+
+msgctxt "#30001"
+msgid "Move down"
+msgstr "Mover abajo"
+
+msgctxt "#30002"
+msgid "Move up"
+msgstr "Mover arriba"
+
+msgctxt "#30003"
+msgid "Clear channels"
+msgstr "ELiminar Canales"
+
+msgctxt "#30004"
+msgid "Remove channel"
+msgstr "Eliminar canal"
