@@ -25,7 +25,7 @@ def get_movie_metadata(movie, genres_dict=None):
         info['genre'] = u" / ".join([x['name'] for x in movie['genres']])
     except KeyError:
         if genres_dict:
-            info['genre'] = u" / ".join([genres_dict[x] for x in movie['genre_ids']])
+            info['genre'] = u" / ".join([genres_dict[x] for x in movie['genre_ids'] if x in genres_dict])
         else:
             info['genre'] = ''
         
