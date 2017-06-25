@@ -1,3 +1,9 @@
+v1.1.7
+- tmdb api-key fix
+
+v1.1.6
+- tmdb fix
+
 v1.1.5
 - maintenance
 

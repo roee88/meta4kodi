@@ -23,22 +23,22 @@
   </extension>
 </addon>
 
-<addon id="plugin.video.meta" name="Meta" version="1.1.6" provider-name="MetaTeam">
+<addon id="plugin.video.meta" name="Meta" version="1.1.7" provider-name="MetaTeam">
   <requires>
     <import addon="xbmc.python" version="2.20.0"/>
     <import addon="script.module.requests"/>
     <import addon="script.module.futures" version="2.2.0"/>
   </requires>
-
+  
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>
   </extension>
-
+  
   <extension point="xbmc.service" library="service.py" start="[login|startup]">
   </extension>
-
+  
   <extension point="kodi.context.item" library="context_playable.py">
-    <provides>executable</provides>
+    <provides>executable</provides>	
       <item>
         <label>$ADDON[plugin.video.meta 30602]</label>
         <visible>!System.HasAddon(context.meta) + [StringCompare(ListItem.dbtype,movie) | StringCompare(ListItem.dbtype,episode)] + SubString(ListItem.FileNameAndPath, plugin.video.meta)</visible>
@@ -46,7 +46,7 @@
   </extension>
 
   <extension point="kodi.context.item" library="context_tvshow.py">
-    <provides>executable</provides>
+    <provides>executable</provides>	
       <item>
         <label>$ADDON[plugin.video.meta 30622]</label>
         <visible>StringCompare(ListItem.dbtype,tvshow) + SubString(ListItem.Path, plugin.video.meta)</visible>
@@ -62,7 +62,7 @@
       <content>movies</content>
       <content>tvshows</content>
       <content>episodes</content>
-    </supportedcontent>
+    </supportedcontent>	
   </extension>
 </addon>
 

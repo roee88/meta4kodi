@@ -39,7 +39,7 @@ def _get_env_key(key):
     try:
         return os.environ[key]
     except KeyError:
-        return "c44d0c7ed132cc2ec90581a7ca1a8f02"
+        return "7a05113def86da5e7093987eddd79b7a"
 
 API_KEY = _get_env_key('TMDB_API_KEY')
 API_VERSION = '3'
