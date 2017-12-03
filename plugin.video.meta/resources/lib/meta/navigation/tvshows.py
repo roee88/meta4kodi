@@ -641,7 +641,8 @@ def tmdb_to_tvdb(tmdb_show):
         
     # Search by name and year
     name = tmdb_show['original_name']
-    year = int(parse_year(tmdb_show['first_air_date']))
+    try: year = int(parse_year(tmdb_show['first_air_date']))
+    except: year = ""
     results = [x['id'] for x in tvdb.search(name, year)]
     
     # Get by id if not a single result
